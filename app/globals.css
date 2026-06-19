@@ -11,7 +11,7 @@
 
 * { box-sizing: border-box; }
 
-html, body { margin: 0; min-height: 100%; background: #dfe3ec; }
+html, body { margin: 0; min-height: 100%; overflow: hidden; background: #dfe3ec; }
 
 body {
   color: var(--ink);
@@ -122,8 +122,8 @@ button { color: inherit; }
 .tabbar span { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #7f8390; font-size: 10px; font-weight: 700; }
 .tabbar .selected { color: var(--brand); }
 
-.picker { position: absolute; z-index: 20; inset: 0; display: flex; flex-direction: column; background: var(--brand); transform: translateY(102%); transition: transform .28s cubic-bezier(.22,.8,.22,1); visibility: hidden; }
-.picker.open { transform: translateY(0); visibility: visible; }
+.picker { position: absolute; z-index: 20; inset: 0; display: flex; flex-direction: column; background: var(--brand); opacity: 0; pointer-events: none; transition: opacity .16s ease-out; visibility: hidden; }
+.picker.open { opacity: 1; pointer-events: auto; visibility: visible; }
 .picker-route { position: relative; z-index: 2; width: calc(100% - 32px); height: 112px; margin: 16px 16px 0; overflow: hidden; border-radius: 24px; background: rgba(255, 255, 255, .88); }
 .picker-route-row { position: relative; height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 12px; color: #6c6e75; }
 .picker-route-row.active { color: #2c2e32; background: white; border-radius: 16px 16px 24px 24px; }
