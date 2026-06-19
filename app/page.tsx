@@ -1,7 +1,8 @@
 "use client";
 
 import { Circle, Clock3, Search, TrainFront } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 
 type Field = "from" | "to";
 
@@ -41,10 +42,9 @@ export default function Home() {
     );
   }, [query]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!activeField) return;
-    const timer = window.setTimeout(() => inputRef.current?.focus(), 220);
-    return () => window.clearTimeout(timer);
+    inputRef.current?.focus({ preventScroll: true });
   }, [activeField]);
 
   useEffect(() => {
@@ -56,14 +56,22 @@ export default function Home() {
   }, []);
 
   const openPicker = (field: Field) => {
-    setActiveField(field);
-    setQuery("");
+    flushSync(() => {
+      setActiveField(field);
+      setQuery("");
+    });
+    inputRef.current?.focus({ preventScroll: true });
   };
 
   const selectStation = (station: Station) => {
     if (activeField === "from") {
-      setFrom(station);
-      setActiveField("to");
+      flushSync(() => {
+        setFrom(station);
+        setActiveField("to");
+        setQuery("");
+      });
+      inputRef.current?.focus({ preventScroll: true });
+      return;
     }
     if (activeField === "to") {
       setTo(station);
@@ -174,6 +182,7 @@ export default function Home() {
                       onChange={(event) => setQuery(event.target.value)}
                       placeholder={placeholder}
                       aria-label={placeholder}
+                      autoFocus
                       autoComplete="off"
                       autoCorrect="off"
                       spellCheck={false}
@@ -197,7 +206,7 @@ export default function Home() {
             <div className="picker-results-list">
               {results.map((station) => (
                 <button className="picker-station" type="button" key={station.station} onClick={() => selectStation(station)}>
-                  <img src="/icons/picker-station.png" alt="" />
+                  <img src="/icons/picker-station.svg" alt="" />
                   <span>{station.station}</span>
                 </button>
               ))}
