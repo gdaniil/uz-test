@@ -26,17 +26,48 @@ button { color: inherit; }
 
 .phone {
   position: relative;
-  width: min(100vw, 430px);
-  height: 100svh;
+  width: min(100vw, 375px);
+  height: min(100svh, 839px);
   min-height: 680px;
-  max-height: 932px;
   overflow: hidden;
   background: var(--brand);
   isolation: isolate;
 }
 
-.brand-header { display: grid; place-items: center; padding: 16px 0; color: white; }
-.brand-logo { display: block; width: auto; height: 14px; }
+.brand-header {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 24px;
+  color: white;
+}
+.brand-logo { display: block; width: 158.943px; height: 14px; flex: 0 1 auto; min-width: 0; }
+.header-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.bonus-pill,
+.header-icon-button {
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  color: white;
+  background: transparent;
+  cursor: pointer;
+}
+.bonus-pill {
+  gap: 4px;
+  padding: 4px 6px 4px 4px;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+}
+.bonus-pill img { width: 24px; height: 24px; flex: 0 0 auto; }
+.header-icon-button { width: 32px; justify-content: center; padding: 6px 4px; }
+.header-icon-button img { width: 20px; height: 20px; flex: 0 0 auto; }
 
 .search-card {
   position: relative;
@@ -118,10 +149,72 @@ button { color: inherit; }
 .recent-card div { display: flex; flex-direction: column; gap: 3px; }
 .recent-card small { color: var(--muted); }
 
-.tabbar { position: fixed; z-index: 40; left: 50%; bottom: 0; width: min(100vw, 430px); height: calc(70px + env(safe-area-inset-bottom)); padding: 9px 14px env(safe-area-inset-bottom); display: grid; grid-template-columns: repeat(4, 1fr); align-items: start; border-top: 1px solid var(--line); background: rgba(255,255,255,.96); backdrop-filter: blur(18px); transform: translateX(-50%); }
-.tabbar span { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #7f8390; font-size: 10px; font-weight: 700; }
-.tabbar img { width: 24px; height: 24px; flex: 0 0 auto; }
-.tabbar .selected { color: var(--brand); }
+.tabbar {
+  position: absolute;
+  z-index: 40;
+  left: 12px;
+  right: 12px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  height: 56px;
+  padding: 2px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .34);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, .12) 42%, rgba(255, 255, 255, .24)),
+    rgba(255, 255, 255, .20);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, .22),
+    0 18px 44px rgba(12, 23, 64, .16),
+    inset 0 1px 0 rgba(255, 255, 255, .36),
+    inset 0 -1px 0 rgba(255, 255, 255, .10);
+  backdrop-filter: blur(24px) saturate(180%) contrast(108%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%) contrast(108%);
+}
+.tabbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, .32),
+      rgba(255, 255, 255, .10) 40%,
+      transparent 62%
+    );
+}
+.tabbar::after {
+  content: "";
+  position: absolute;
+  top: -44px;
+  right: -24px;
+  width: 148px;
+  height: 148px;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(rgba(255, 255, 255, .38), transparent 70%);
+  filter: blur(10px);
+}
+.tabbar span { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #6c6e75; font-size: 12px; font-weight: 500; line-height: 12px; }
+.tabbar img { width: 24px; height: 24px; flex: 0 0 auto; filter: brightness(0) saturate(100%) invert(44%) sepia(6%) saturate(368%) hue-rotate(191deg) brightness(94%) contrast(87%); }
+.tabbar .selected {
+  color: var(--brand);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, .14)),
+    rgba(33, 55, 134, .10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .38),
+    inset 0 -1px 0 rgba(255, 255, 255, .12),
+    inset 0 -8px 16px rgba(33, 55, 134, .08);
+}
+.tabbar .selected img { filter: brightness(0) saturate(100%) invert(20%) sepia(43%) saturate(2056%) hue-rotate(216deg) brightness(90%) contrast(97%); }
+.tabbar button:focus-visible,
+.tabbar a:focus-visible { outline: 0; }
 
 .picker { position: fixed; z-index: 50; top: 0; bottom: 0; left: 50%; width: min(100vw, 430px); display: flex; flex-direction: column; background: var(--brand); opacity: 0; pointer-events: none; transform: translateX(-50%); transition: opacity .16s ease-out; visibility: hidden; }
 .picker.open { opacity: 1; pointer-events: auto; visibility: visible; }
@@ -172,7 +265,6 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   display: flex;
   flex-direction: column;
   background: var(--brand);
-  padding-bottom: calc(70px + env(safe-area-inset-bottom));
 }
 
 .tickets-header-row {
@@ -218,7 +310,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 16px 16px 24px;
+  padding: 16px 16px calc(120px + env(safe-area-inset-bottom));
   border-radius: 32px 32px 0 0;
   background: var(--canvas);
   display: flex;
@@ -251,15 +343,26 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 .ticket-labels { display: flex; height: 24px; }
 
 .ticket-label {
-  padding: 0 8px;
+  height: 24px;
+  min-width: 62px;
+  margin-right: -15px;
+  padding: 0 15px 0 14px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
   font-weight: 600;
   line-height: 16px;
   letter-spacing: 0.1px;
   color: white;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+}
+
+.ticket-label.label-2 {
+  min-width: 57px;
+  padding-left: 18px;
+  clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
 }
 
 .ticket-route-section {
@@ -277,7 +380,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
 }
 
@@ -301,12 +404,13 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   letter-spacing: 0.1px;
   color: #2c2e32;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .ticket-route-line {
-  flex: 1;
+  flex: 0 1 183px;
+  width: 183px;
   height: 24px;
   display: flex;
   align-items: center;
@@ -319,14 +423,14 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   border-radius: 50%;
   flex-shrink: 0;
 }
-.route-dot-start { border: 1.5px solid #c7cbd5; background: white; }
+.route-dot-start { border: 2px solid #213786; background: white; }
 .route-dot-end { background: #213786; }
 
 .route-track {
   flex: 1;
   position: relative;
-  height: 1.5px;
-  background-image: repeating-linear-gradient(to right, #c7cbd5 0, #c7cbd5 4px, transparent 4px, transparent 8px);
+  height: 2px;
+  background: #213786;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -356,6 +460,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   height: 8px;
   border-radius: 50%;
   background: #d98020;
+  box-shadow: 0 0 0 4px rgba(140, 87, 13, 0.2);
   flex-shrink: 0;
 }
 
@@ -430,7 +535,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 }
 .ticket-avatar + .ticket-avatar { margin-left: -12px; }
 .avatar-red { background: #c53d3d; }
-.avatar-photo { background: #7b97cc; }
+.avatar-photo { overflow: hidden; background: #d5dae7; }
+.avatar-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .passengers-label {
   font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -465,18 +571,32 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 .show-tickets-btn:active { opacity: 0.9; transform: scale(0.99); }
 
 /* Tabbar button support */
-.tabbar button {
+.tabbar button,
+.tabbar a {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  color: #7f8390;
-  font-size: 10px;
-  font-weight: 700;
-  background: none;
+  justify-content: center;
+  gap: 5px;
+  height: 52px;
+  min-width: 0;
+  color: #6c6e75;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 12px;
+  background: transparent;
   border: 0;
+  border-radius: 999px;
   padding: 0;
   cursor: pointer;
   font-family: inherit;
+  text-decoration: none;
+  transition: background .18s ease, box-shadow .18s ease, color .18s ease, transform .18s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.tabbar button.selected { color: var(--brand); }
+.tabbar button.selected,
+.tabbar a.selected { color: var(--brand); }
+.tabbar button:active,
+.tabbar a:active { transform: scale(.98); }
