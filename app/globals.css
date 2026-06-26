@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+
 :root {
   --brand: #213786;
   --brand-dark: #17265f;
@@ -22,7 +24,7 @@ body {
 button, input { font: inherit; }
 button { color: inherit; }
 
-.stage { min-height: 100svh; display: grid; place-items: center; }
+.stage { min-height: 100svh; display: grid; justify-items: center; align-items: start; }
 
 .phone {
   position: relative;
@@ -254,7 +256,12 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   .picker { transition: none; }
 }
 
+@media (max-width: 430px) {
+  html, body { background: var(--brand); }
+}
+
 @media (min-width: 431px) {
+  .stage { align-items: center; }
   .phone { box-shadow: 0 24px 80px rgba(23, 38, 95, .24); }
 }
 
@@ -571,6 +578,207 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 }
 .show-tickets-btn:active { opacity: 0.9; transform: scale(0.99); }
 
+/* ---- Tabbar dark variant (schedule page) ---- */
+
+.schedule-page ~ .tabbar {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04) 42%, rgba(255,255,255,.08)),
+    rgba(20, 18, 17, 0.80);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, .48),
+    0 18px 44px rgba(0, 0, 0, .32),
+    inset 0 1px 0 rgba(255, 255, 255, .12),
+    inset 0 -1px 0 rgba(255, 255, 255, .04);
+}
+
+.schedule-page ~ .tabbar::before {
+  background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04) 40%, transparent 62%);
+}
+
+.schedule-page ~ .tabbar button,
+.schedule-page ~ .tabbar a {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.schedule-page ~ .tabbar img {
+  filter: brightness(0) invert(1) opacity(0.38);
+}
+
+.schedule-page ~ .tabbar .selected {
+  color: #91a3e4;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)),
+    rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    inset 0 -1px 0 rgba(255,255,255,.06),
+    inset 0 -8px 16px rgba(255,255,255,.04);
+}
+
+.schedule-page ~ .tabbar .selected img {
+  filter: brightness(0) saturate(100%) invert(71%) sepia(28%) saturate(600%) hue-rotate(196deg) brightness(98%) contrast(90%);
+}
+
+/* ---- Schedule Tab ---- */
+
+.schedule-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--brand);
+}
+
+.schedule-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 24px 16px;
+  flex-shrink: 0;
+}
+
+.schedule-title {
+  flex: 1;
+  margin: 0;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  color: white;
+}
+
+.schedule-station-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  height: 32px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.schedule-card {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 16px calc(120px + env(safe-area-inset-bottom));
+  border-radius: 32px 32px 0 0;
+  background: linear-gradient(to bottom, #131211 1.328%, #23201e);
+  box-shadow: 0 1px 1.5px rgba(44, 42, 41, 0.07);
+  scrollbar-width: none;
+}
+.schedule-card::-webkit-scrollbar { display: none; }
+
+.schedule-seg {
+  display: flex;
+  padding: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.schedule-seg-btn {
+  flex: 1;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+
+.schedule-seg-btn.active {
+  background: #646364;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18), 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.schedule-list {
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sched-header-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -0.13px;
+  color: #6e7173;
+}
+
+.sc-train { width: 40px; flex-shrink: 0; }
+.sc-route { flex: 0 0 160px; width: 160px; }
+.sc-time  { flex-shrink: 0; white-space: nowrap; }
+.sc-track { flex: 1; min-width: 0; text-align: right; }
+
+.sched-entry { display: flex; flex-direction: column; }
+
+.sched-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+}
+
+.sched-entry.is-delayed .sched-row { padding-bottom: 8px; }
+
+.sched-row.green .sc-train,
+.sched-row.green .sc-route,
+.sched-row.green .sc-time { color: #cbd677; }
+
+.sched-row.orange .sc-train,
+.sched-row.orange .sc-route,
+.sched-row.orange .sc-time { color: #ef9010; }
+
+.sc-route { display: flex; flex-direction: column; }
+
+.sc-track-white { color: white; }
+.sc-track-muted { color: #6e7173; }
+
+.sched-delay-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(239, 144, 16, 0.1);
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.1px;
+  color: #e89a30;
+  white-space: nowrap;
+}
+
 /* Tabbar button support */
 .tabbar button,
 .tabbar a {
@@ -601,3 +809,222 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 .tabbar a.selected { color: var(--brand); }
 .tabbar button:active,
 .tabbar a:active { transform: scale(.98); }
+
+/* ---- Profile Tab ---- */
+
+.profile-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--brand);
+}
+
+.profile-offers {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 16px;
+  flex-shrink: 0;
+}
+
+.profile-offers-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-offers-sep {
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+
+.profile-offers-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-offers-value {
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: white;
+}
+
+.profile-offers-sublabel {
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #b7babc;
+}
+
+.profile-offers-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.uz-bonus-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: linear-gradient(167deg, #d9dae0 13%, #aab3c4 86%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.uz-bonus-badge span {
+  color: white;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.profile-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 16px calc(120px + env(safe-area-inset-bottom));
+  border-radius: 32px 32px 0 0;
+  background: var(--canvas);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  scrollbar-width: none;
+}
+.profile-content::-webkit-scrollbar { display: none; }
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+}
+
+.profile-section-title {
+  margin: 0;
+  padding: 16px 16px 8px;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.1px;
+  color: #6c6e75;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 20px;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.profile-section .profile-card {
+  margin-bottom: 0;
+}
+
+.profile-section + .profile-card,
+.profile-section + .profile-section,
+.profile-card + .profile-section,
+.profile-card + .profile-card {
+  margin-top: 16px;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 0;
+  border-bottom: 1px solid #d5dae7;
+}
+
+.profile-row-last {
+  border-bottom: 0;
+}
+
+.profile-row-label {
+  flex: 1;
+  min-width: 0;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #2c2e32;
+}
+
+.profile-row-sublabel {
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #6c6e75;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.profile-row-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-avatar-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #d85d9e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-logout {
+  width: 100%;
+  padding: 16px 0;
+  border: 0;
+  background: transparent;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #2c2e32;
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile-version {
+  margin: 0;
+  padding: 8px 16px;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.1px;
+  color: #6c6e75;
+}

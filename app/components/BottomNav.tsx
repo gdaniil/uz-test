@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 type BottomNavProps = {
-  active: "search" | "tickets";
+  active: "search" | "tickets" | "schedule" | "profile";
 };
 
 export function BottomNav({ active }: BottomNavProps) {
@@ -15,14 +15,14 @@ export function BottomNav({ active }: BottomNavProps) {
         <img src="/icons/tabbar-tickets.svg" alt="" />
         Квитки
       </Link>
-      <button type="button">
+      <Link className={active === "schedule" ? "selected" : ""} href="/schedule">
         <img src="/icons/tabbar-schedule.svg" alt="" />
         Табло
-      </button>
-      <button type="button">
+      </Link>
+      <Link className={active === "profile" ? "selected" : ""} href="/profile">
         <img src="/icons/tabbar-profile.svg" alt="" />
         Профіль
-      </button>
+      </Link>
     </nav>
   );
 }
