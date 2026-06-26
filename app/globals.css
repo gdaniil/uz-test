@@ -35,8 +35,8 @@ button { color: inherit; }
   isolation: isolate;
 }
 
-.brand-header { height: 50px; display: grid; place-items: center; color: white; }
-.wordmark { text-align: center; font-size: 14px; font-weight: 900; letter-spacing: .18em; }
+.brand-header { display: grid; place-items: center; padding: 16px 0; color: white; }
+.brand-logo { display: block; width: auto; height: 14px; }
 
 .search-card {
   position: relative;
@@ -118,11 +118,12 @@ button { color: inherit; }
 .recent-card div { display: flex; flex-direction: column; gap: 3px; }
 .recent-card small { color: var(--muted); }
 
-.tabbar { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: calc(70px + env(safe-area-inset-bottom)); padding: 9px 14px env(safe-area-inset-bottom); display: grid; grid-template-columns: repeat(4, 1fr); align-items: start; border-top: 1px solid var(--line); background: rgba(255,255,255,.96); backdrop-filter: blur(18px); }
+.tabbar { position: fixed; z-index: 40; left: 50%; bottom: 0; width: min(100vw, 430px); height: calc(70px + env(safe-area-inset-bottom)); padding: 9px 14px env(safe-area-inset-bottom); display: grid; grid-template-columns: repeat(4, 1fr); align-items: start; border-top: 1px solid var(--line); background: rgba(255,255,255,.96); backdrop-filter: blur(18px); transform: translateX(-50%); }
 .tabbar span { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #7f8390; font-size: 10px; font-weight: 700; }
+.tabbar img { width: 24px; height: 24px; flex: 0 0 auto; }
 .tabbar .selected { color: var(--brand); }
 
-.picker { position: absolute; z-index: 20; inset: 0; display: flex; flex-direction: column; background: var(--brand); opacity: 0; pointer-events: none; transition: opacity .16s ease-out; visibility: hidden; }
+.picker { position: fixed; z-index: 50; top: 0; bottom: 0; left: 50%; width: min(100vw, 430px); display: flex; flex-direction: column; background: var(--brand); opacity: 0; pointer-events: none; transform: translateX(-50%); transition: opacity .16s ease-out; visibility: hidden; }
 .picker.open { opacity: 1; pointer-events: auto; visibility: visible; }
 .picker-route { position: relative; z-index: 2; width: calc(100% - 32px); height: 112px; margin: 16px 16px 0; overflow: hidden; border-radius: 24px; background: rgba(255, 255, 255, .88); }
 .picker-route-row { position: relative; height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 12px; color: #6c6e75; }
@@ -162,3 +163,320 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 @media (min-width: 431px) {
   .phone { box-shadow: 0 24px 80px rgba(23, 38, 95, .24); }
 }
+
+/* ---- Tickets Tab ---- */
+
+.tickets-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--brand);
+  padding-bottom: calc(70px + env(safe-area-inset-bottom));
+}
+
+.tickets-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  flex-shrink: 0;
+}
+
+.tickets-title {
+  flex: 1;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 30px;
+  letter-spacing: -0.3px;
+  color: white;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.archive-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  height: 32px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tickets-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 16px 24px;
+  border-radius: 32px 32px 0 0;
+  background: var(--canvas);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  scrollbar-width: none;
+}
+.tickets-content::-webkit-scrollbar { display: none; }
+
+.ticket-group { display: flex; flex-direction: column; }
+
+.ticket-date {
+  padding: 12px 8px;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #2c2e32;
+}
+
+.ticket-card {
+  border-radius: 20px;
+  background: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket-labels { display: flex; height: 24px; }
+
+.ticket-label {
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: white;
+}
+
+.ticket-route-section {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ticket-route-section.gap-md { gap: 12px; }
+
+.ticket-stations { display: flex; align-items: flex-start; }
+
+.ticket-station {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ticket-station-right { align-items: flex-end; }
+
+.t-time {
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  color: #2c2e32;
+  white-space: nowrap;
+}
+
+.t-station {
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: #2c2e32;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ticket-route-line {
+  flex: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.route-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.route-dot-start { border: 1.5px solid #c7cbd5; background: white; }
+.route-dot-end { background: #213786; }
+
+.route-track {
+  flex: 1;
+  position: relative;
+  height: 1.5px;
+  background-image: repeating-linear-gradient(to right, #c7cbd5 0, #c7cbd5 4px, transparent 4px, transparent 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-dur {
+  background: white;
+  padding: 2px 6px;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #213786;
+  white-space: nowrap;
+}
+
+.ticket-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 4px 0;
+}
+
+.notice-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d98020;
+  flex-shrink: 0;
+}
+
+.notice-text {
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #8d560c;
+  white-space: nowrap;
+}
+
+.ticket-transfer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--canvas);
+}
+
+.transfer-station {
+  flex: 1;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #2c2e32;
+}
+
+.transfer-layover {
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #2c2e32;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.ticket-divider-wrap { padding: 0 16px 16px; }
+.ticket-divider { height: 1px; background: #d5dae7; }
+
+.ticket-passengers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+}
+.ticket-passengers.pb { padding-bottom: 16px; }
+
+.ticket-avatars { display: flex; }
+
+.ticket-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #d5dae7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.1px;
+  color: white;
+}
+.ticket-avatar + .ticket-avatar { margin-left: -12px; }
+.avatar-red { background: #c53d3d; }
+.avatar-photo { background: #7b97cc; }
+
+.passengers-label {
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #6c6e75;
+  white-space: nowrap;
+}
+
+.ticket-btn-wrap { padding: 16px; }
+
+.show-tickets-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--brand);
+  color: white;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+}
+.show-tickets-btn:active { opacity: 0.9; transform: scale(0.99); }
+
+/* Tabbar button support */
+.tabbar button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #7f8390;
+  font-size: 10px;
+  font-weight: 700;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+.tabbar button.selected { color: var(--brand); }
