@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Globe2, MapPin, MoreVertical, Plus, Repeat2, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type OpenTicket = {
   id: string;
