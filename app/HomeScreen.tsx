@@ -145,6 +145,9 @@ export function HomeScreen() {
   };
 
   return (
+    <>
+      {/* iOS 26 Safari reads the topmost position:fixed element's background for the status bar tint */}
+      <div aria-hidden="true" style={{ position: "fixed", top: 0, left: 0, right: 0, height: "max(env(safe-area-inset-top), 6px)", background: "#213786", zIndex: 9999, pointerEvents: "none" }} />
     <main className="stage">
       <section className="phone" aria-label="Прототип пошуку квитків">
         <header className="brand-header">
@@ -300,5 +303,6 @@ export function HomeScreen() {
         <BottomNav active="search" />
       </section>
     </main>
+    </>
   );
 }
