@@ -11,6 +11,7 @@ type TicketData = {
   transfer?: { time: string; station: string; layover: string };
   passengerCount: number;
   showButton?: boolean;
+  openOnCard?: boolean;
 };
 
 const TICKETS: TicketData[] = [
@@ -41,6 +42,7 @@ const TICKETS: TicketData[] = [
       layover: "Пересадка 2 год 21 хв",
     },
     passengerCount: 2,
+    openOnCard: true,
   },
   {
     id: "kyiv-darnytsia-2024-10-25",
@@ -121,7 +123,7 @@ function TransferIcon() {
 function TicketCard({ ticket }: { ticket: TicketData }) {
   const hasTransfer = Boolean(ticket.transfer);
 
-  return (
+  const cardContent = (
     <div className="ticket-card">
       <div className="ticket-labels">
         {ticket.labels.map((label, index) => (
@@ -194,6 +196,16 @@ function TicketCard({ ticket }: { ticket: TicketData }) {
       )}
     </div>
   );
+
+  if (ticket.openOnCard) {
+    return (
+      <Link className="ticket-card-link" href={`/tickets/${ticket.id}`} aria-label={`Показати квитки ${ticket.departure.station} - ${ticket.arrival.station}`}>
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return cardContent;
 }
 
 export function TicketsScreen() {

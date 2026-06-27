@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Globe2, MoreVertical, Plus, Repeat2, X } from "lucide-react";
+import { Globe2, MapPin, MoreVertical, Plus, Repeat2, X } from "lucide-react";
 import { useState } from "react";
 
 type OpenTicket = {
@@ -13,6 +13,30 @@ type OpenTicket = {
   seat: string;
   track: string;
   seatDetails: string;
+};
+
+type TripRoute = {
+  train: string;
+  date: string;
+  from: string;
+  to: string;
+  departureTime: string;
+  arrivalTime: string;
+  duration: string;
+  notice: string;
+  mapRouteLabel: string;
+  weatherCity: string;
+  transferTabs?: [string, string];
+  transferInfo?: {
+    title: string;
+    text: string;
+  };
+  stops: {
+    station: string;
+    times: string[];
+    stop: string;
+    status: string;
+  }[];
 };
 
 const OPEN_TICKETS: OpenTicket[] = [
@@ -69,6 +93,49 @@ const STOPS = [
   { station: "Жмеринка", times: ["21:08", "21:11"], stop: "2 хв", status: "end" },
 ];
 
+const TRIP_ROUTES: Record<string, TripRoute> = {
+  "kyiv-zhmerynka-2024-10-22": {
+    train: "116K",
+    date: "22 жовтня",
+    from: "Київ",
+    to: "Жмеринка",
+    departureTime: "15:17",
+    arrivalTime: "21:08",
+    duration: "5 год 51 хв",
+    notice: "Потяг прибуває на 11 колію",
+    mapRouteLabel: "Карта маршруту Київ - Жмеринка",
+    weatherCity: "Жмеринці",
+    stops: STOPS,
+  },
+  "zhmerynka-kyiv-2024-10-25": {
+    train: "116K",
+    date: "25 жовтня",
+    from: "Жмеринка",
+    to: "Київ",
+    departureTime: "15:17",
+    arrivalTime: "21:08",
+    duration: "5 год 51 хв",
+    notice: "Потяг прибуває на 11 колію",
+    mapRouteLabel: "Карта маршруту Жмеринка - Київ",
+    weatherCity: "Києві",
+    transferTabs: ["→ Полтава", "→ Київ"],
+    transferInfo: {
+      title: "Далі пересадка 2 год 21 хв",
+      text: "приміський потяг 0091, перон 2",
+    },
+    stops: [
+      { station: "Жмеринка", times: ["15:17"], stop: "початкова", status: "start" },
+      { station: "Роздільна 1", times: ["15:55", "15:58"], stop: "3 хв", status: "middle" },
+      { station: "Ніжин", times: ["20:11", "20:14"], stop: "12 хв", status: "middle" },
+      { station: "Київ", times: ["21:08", "21:11"], stop: "2 хв", status: "end" },
+    ],
+  },
+};
+
+function getTripRoute(ticketId: string) {
+  return TRIP_ROUTES[ticketId] ?? TRIP_ROUTES["kyiv-zhmerynka-2024-10-22"];
+}
+
 const INFO_BANNERS = [
   {
     id: 1,
@@ -124,12 +191,12 @@ function Header({ activeIndex, total, onSelect, isMap }: { activeIndex: number; 
   );
 }
 
-function TicketSummary() {
+function TicketSummary({ trip }: { trip: TripRoute }) {
   return (
     <section className="open-ticket-summary" aria-label="Маршрут">
-      <h1>116K · 22 жовтня</h1>
-      <p>Київ → Жмеринка</p>
-      <p>15:17 – 21:08, в дорозі 5 год 51 хв</p>
+      <h1>{trip.train} · {trip.date}</h1>
+      <p>{trip.from} → {trip.to}</p>
+      <p>{trip.departureTime} – {trip.arrivalTime}, в дорозі {trip.duration}</p>
     </section>
   );
 }
@@ -143,38 +210,38 @@ function TicketLabels() {
   );
 }
 
-function RouteMiniCard() {
+function RouteMiniCard({ trip }: { trip: TripRoute }) {
   return (
     <section className="open-ticket-card info-route-card" aria-label="Маршрут поїзда">
       <TicketLabels />
       <div className="info-route-body">
         <div className="info-route-main">
           <div className="info-route-station">
-            <strong>15:17</strong>
-            <span>Київ</span>
+            <strong>{trip.departureTime}</strong>
+            <span>{trip.from}</span>
           </div>
           <div className="info-route-line" aria-hidden>
             <span />
-            <em>5 год 51 хв</em>
+            <em>{trip.duration}</em>
             <span />
           </div>
           <div className="info-route-station right">
-            <strong>21:08</strong>
-            <span>Жмеринка</span>
+            <strong>{trip.arrivalTime}</strong>
+            <span>{trip.to}</span>
           </div>
         </div>
         <div className="info-delay">
           <span />
-          Потяг прибуває на 11 колію
+          {trip.notice}
         </div>
       </div>
     </section>
   );
 }
 
-function TripMap() {
+function TripMap({ trip }: { trip: TripRoute }) {
   return (
-    <section className="trip-map" aria-label="Карта маршруту Київ — Жмеринка">
+    <section className="trip-map" aria-label={trip.mapRouteLabel}>
       <div className="map-grid" />
       <div className="map-park park-one" />
       <div className="map-park park-two" />
@@ -188,11 +255,11 @@ function TripMap() {
       </svg>
       <div className="map-pin map-pin-start">
         <span />
-        Київ
+        {trip.from}
       </div>
       <div className="map-pin map-pin-end">
         <span />
-        Жмеринка
+        {trip.to}
       </div>
     </section>
   );
@@ -286,15 +353,15 @@ function TripActions() {
   );
 }
 
-function StopsCard() {
-  const visibleBeforeLink = STOPS.slice(0, 2);
-  const visibleAfterLink = STOPS.slice(2);
+function StopsCard({ trip }: { trip: TripRoute }) {
+  const visibleBeforeLink = trip.stops.slice(0, 2);
+  const visibleAfterLink = trip.stops.slice(2);
 
   return (
     <section className="open-ticket-card stops-card" aria-label="Станції маршруту">
       <div className="stops-header">
         <span>Маршрут</span>
-        <strong>5 год 51 хв ∙ 18 станцій</strong>
+        <strong>{trip.duration} ∙ 18 станцій</strong>
       </div>
       <div className="stops-divider" />
       <div className="stops-table">
@@ -389,12 +456,12 @@ function DetailRow({ icon, title, text }: { icon: React.ReactNode; title: string
   );
 }
 
-function TripDetails() {
+function TripDetails({ trip }: { trip: TripRoute }) {
   return (
     <section className="open-ticket-card trip-details" aria-label="Деталі поїздки">
       <DetailRow icon={<CafeDetailIcon />} title="Вагон-ресторан" text="WOG-кафе у 6 вагоні." />
       <DetailRow icon={<ClockDetailIcon />} title="Зміна часового поясу (-1 год)" text="Прибуття у 17:00 по Варшаві (18:00 по Києву)" />
-      <DetailRow icon={<WeatherDetailIcon />} title="Погода у Жмеринці" text="+21° без опадів" />
+      <DetailRow icon={<WeatherDetailIcon />} title={`Погода у ${trip.weatherCity}`} text="+21° без опадів" />
     </section>
   );
 }
@@ -428,25 +495,92 @@ function InfoBanners() {
   );
 }
 
-function TripInfoScreen() {
+function TripInfoScreen({ trip }: { trip: TripRoute }) {
   return (
     <div className="ticket-info-scroll">
-      <TripMap />
+      <TripMap trip={trip} />
       <div className="ticket-info-sheet">
         <div className="sheet-grabber" aria-hidden />
-        <RouteMiniCard />
+        <RouteMiniCard trip={trip} />
         <TripActions />
-        <StopsCard />
-        <TripDetails />
+        <StopsCard trip={trip} />
+        <TripDetails trip={trip} />
         <InfoBanners />
       </div>
     </div>
   );
 }
 
-function QrCard({ ticket }: { ticket: OpenTicket }) {
+function TransferMiniIcon() {
   return (
-    <section className="open-ticket-card qr-card" aria-label="Посадковий QR-квиток">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <g clipPath="url(#open-ticket-transfer-icon-clip)">
+        <path
+          d="M11 21C11 21.5523 11.4477 22 12 22C12.5523 22 13 21.5523 13 21C13 20.4477 12.5523 20 12 20C11.4477 20 11 20.4477 11 21Z"
+          fill="#8D560C"
+          stroke="#8D560C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M11 3C11 3.55228 11.4477 4 12 4C12.5523 4 13 3.55228 13 3C13 2.44772 12.5523 2 12 2C11.4477 2 11 2.44772 11 3Z"
+          fill="#8D560C"
+          stroke="#8D560C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12Z"
+          stroke="#8D560C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+      <defs>
+        <clipPath id="open-ticket-transfer-icon-clip">
+          <rect width="24" height="24" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+function TransferTabs({ tabs }: { tabs: [string, string] }) {
+  return (
+    <div className="ticket-transfer-tabs" role="tablist" aria-label="Ділянки маршруту">
+      {tabs.map((tab, index) => (
+        <button key={tab} className={index === 0 ? "active" : ""} type="button" role="tab" aria-selected={index === 0}>
+          {tab}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function TicketTransferInfo({ transfer }: { transfer: NonNullable<TripRoute["transferInfo"]> }) {
+  return (
+    <div className="open-ticket-transfer-info">
+      <TransferMiniIcon />
+      <div className="open-ticket-transfer-text">
+        <strong>{transfer.title}</strong>
+        <span>{transfer.text}</span>
+      </div>
+      <button className="transfer-map-btn" type="button" aria-label="Показати місце пересадки">
+        <MapPin size={16} strokeWidth={2.2} />
+      </button>
+    </div>
+  );
+}
+
+function QrCard({ ticket, trip }: { ticket: OpenTicket; trip: TripRoute }) {
+  const hasTransfer = Boolean(trip.transferInfo && trip.transferTabs);
+
+  return (
+    <section className={`open-ticket-card qr-card${hasTransfer ? " has-transfer" : ""}`} aria-label="Посадковий QR-квиток">
+      {trip.transferTabs && <TransferTabs tabs={trip.transferTabs} />}
       <p className="ticket-card-caption">Посадковий QR-квиток</p>
       <img className="ticket-qr-img" src="/icons/open-ticket-qr.png" alt="QR-код квитка" />
       <div className="ticket-chips">
@@ -454,6 +588,12 @@ function QrCard({ ticket }: { ticket: OpenTicket }) {
         <span>{ticket.seat}</span>
         <span>{ticket.track}</span>
       </div>
+      {trip.transferInfo && (
+        <>
+          <div className="open-ticket-divider full transfer-divider" />
+          <TicketTransferInfo transfer={trip.transferInfo} />
+        </>
+      )}
     </section>
   );
 }
@@ -534,7 +674,8 @@ function WalletBar() {
   );
 }
 
-export function TicketOpenScreen() {
+export function TicketOpenScreen({ ticketId }: { ticketId: string }) {
+  const trip = getTripRoute(ticketId);
   const [activeIndex, setActiveIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
@@ -603,13 +744,13 @@ export function TicketOpenScreen() {
         >
           {OPEN_TICKETS.map((ticket) => (
             <div key={ticket.id} className="ticket-open-scroll">
-              <TicketSummary />
-              <QrCard ticket={ticket} />
+              <TicketSummary trip={trip} />
+              <QrCard ticket={ticket} trip={trip} />
               <PassengerCard ticket={ticket} />
               <WagonScheme ticket={ticket} />
             </div>
           ))}
-          <TripInfoScreen />
+          <TripInfoScreen trip={trip} />
         </div>
       </div>
       <Header activeIndex={activeIndex} total={totalSlides} onSelect={setActiveIndex} isMap={activeIndex === totalSlides - 1} />
