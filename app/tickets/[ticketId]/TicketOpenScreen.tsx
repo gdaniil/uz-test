@@ -677,6 +677,15 @@ function WalletBar() {
 export function TicketOpenScreen({ ticketId }: { ticketId: string }) {
   const trip = getTripRoute(ticketId);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const prev = meta?.getAttribute("content") ?? null;
+    meta?.setAttribute("content", "#eff1f6");
+    return () => {
+      if (prev !== null) meta?.setAttribute("content", prev);
+    };
+  }, []);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
