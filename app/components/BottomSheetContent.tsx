@@ -37,7 +37,17 @@ const MI = ({ name }: { name: string }) => (
   <span className="mat-icon">{name}</span>
 );
 
-const BANNERS = [
+type Banner = {
+  id: number;
+  bg: string;
+  bgImage: string;
+  title: string;
+  desc: string;
+  pill: string;
+  align: "left" | "center";
+};
+
+const BANNERS: Banner[] = [
   {
     id: 1,
     bg: "linear-gradient(173deg, rgba(20,35,20,0.25) 0%, rgba(31,47,46,0.88) 60%)",
@@ -45,7 +55,7 @@ const BANNERS = [
     title: "Спецзамовлення квитків для військових",
     desc: "Ви військовий і маєте терміново їхати у справах, проте всі квитки вже викуплені?",
     pill: "Квитки для військових",
-    align: "left" as const,
+    align: "left",
   },
   {
     id: 2,
@@ -54,7 +64,7 @@ const BANNERS = [
     title: "Залізна родина",
     desc: "524 поранених та 582 загиблих — це ціна порятунку мільйонів українців для Укрзалізниці.",
     pill: "Підтримати родини працівників УЗ",
-    align: "left" as const,
+    align: "left",
   },
   {
     id: 3,
@@ -63,7 +73,7 @@ const BANNERS = [
     title: "Залізні друзі",
     desc: "Перетворюйте кожен кілометр залізничної подорожі на «обіймашки» та обмінюйте їх на подарунки від партнерів!",
     pill: "До програми лояльності",
-    align: "left" as const,
+    align: "left",
   },
 ];
 
