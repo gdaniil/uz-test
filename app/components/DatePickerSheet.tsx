@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 const DAYS_UA = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
+const MONTHS_SHORT = ["Січ", "Лют", "Бер", "Кві", "Тра", "Чер", "Лип", "Сер", "Вер", "Жов", "Лис", "Гру"];
+const DAYS_SHORT = ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 const MONTHS_UA = [
   "Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень",
   "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень",
@@ -191,7 +193,9 @@ export function DatePickerSheet({ open, selected, onSelect, onClose }: Props) {
 
         <div className="cal-footer">
           <button className="cal-confirm" type="button" onClick={onClose}>
-            Готово
+            {selected
+              ? `Обрати · ${selected.getDate()} ${MONTHS_SHORT[selected.getMonth()]}, ${DAYS_SHORT[selected.getDay()]}`
+              : "Обрати"}
           </button>
         </div>
       </div>

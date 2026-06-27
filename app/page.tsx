@@ -46,7 +46,11 @@ export default function Home() {
   const [to, setTo] = useState<Station | null>(null);
   const [activeField, setActiveField] = useState<Field | null>(null);
   const [query, setQuery] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  });
   const [showDatePicker, setShowDatePicker] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 

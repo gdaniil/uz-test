@@ -40,7 +40,8 @@ const MI = ({ name }: { name: string }) => (
 const BANNERS = [
   {
     id: 1,
-    bg: "linear-gradient(173deg, rgba(58,82,62,0.3) 5%, rgb(31,47,46) 66%)",
+    bg: "linear-gradient(173deg, rgba(20,35,20,0.25) 0%, rgba(31,47,46,0.88) 60%)",
+    bgImage: "https://images.unsplash.com/photo-1708458664323-a8865bc0f9ca?auto=format&fit=crop&w=800&q=80",
     title: "Спецзамовлення квитків для військових",
     desc: "Ви військовий і маєте терміново їхати у справах, проте всі квитки вже викуплені?",
     pill: "Квитки для військових",
@@ -48,7 +49,8 @@ const BANNERS = [
   },
   {
     id: 2,
-    bg: "linear-gradient(180deg, #25033a 0%, #3b1057 100%)",
+    bg: "linear-gradient(180deg, rgba(37,3,58,0.45) 0%, rgba(59,16,87,0.9) 100%)",
+    bgImage: "https://images.unsplash.com/photo-1561821632-0ac8d40ad4d1?auto=format&fit=crop&w=800&q=80",
     title: "Залізна родина",
     desc: "524 поранених та 582 загиблих — це ціна порятунку мільйонів українців для Укрзалізниці.",
     pill: "Підтримати родини працівників УЗ",
@@ -56,11 +58,12 @@ const BANNERS = [
   },
   {
     id: 3,
-    bg: "linear-gradient(155deg, #0e3f7a 0%, #1a6098 55%, #1e4d8c 100%)",
+    bg: "linear-gradient(173deg, rgba(14,63,122,0.5) 0%, rgba(26,96,152,0.85) 60%)",
+    bgImage: "https://images.unsplash.com/photo-1603411724506-7dcf41be8673?auto=format&fit=crop&w=800&q=80",
     title: "Залізні друзі",
     desc: "Перетворюйте кожен кілометр залізничної подорожі на «обіймашки» та обмінюйте їх на подарунки від партнерів!",
     pill: "До програми лояльності",
-    align: "center" as const,
+    align: "left" as const,
   },
 ];
 
@@ -160,7 +163,11 @@ export function BottomSheetContent() {
             <div
               key={b.id}
               className={`banner-item${b.align === "center" ? " banner-item--center" : ""}`}
-              style={{ background: b.bg }}
+              style={{
+                backgroundImage: `${b.bg}, url(${b.bgImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
             >
               <div className={`banner-body${b.align === "center" ? " banner-body--center" : ""}`}>
                 <div className="banner-text">

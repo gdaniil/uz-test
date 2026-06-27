@@ -186,10 +186,10 @@ function TicketCard({ ticket }: { ticket: TicketData }) {
 
       {ticket.showButton && (
         <div className="ticket-btn-wrap">
-          <button className="show-tickets-btn" type="button">
+          <Link className="show-tickets-btn" href={`/tickets/${ticket.id}`}>
             <QrIcon />
             Показати квитки
-          </button>
+          </Link>
         </div>
       )}
     </div>
