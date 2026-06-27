@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { BottomNav } from "./components/BottomNav";
+import { BottomSheetContent } from "./components/BottomSheetContent";
 
 type Field = "from" | "to";
 
@@ -28,12 +29,48 @@ const stations: Station[] = [
   { city: "Краматорськ", station: "Краматорськ" },
 ];
 
+const SHEET_COLLAPSED = 454;
+const SHEET_EXPANDED = 48;
+
 export default function Home() {
   const [from, setFrom] = useState<Station | null>(null);
   const [to, setTo] = useState<Station | null>(null);
   const [activeField, setActiveField] = useState<Field | null>(null);
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const sheetRef = useRef<HTMLElement>(null);
+  const [sheetSnap, setSheetSnap] = useState<"collapsed" | "expanded">("collapsed");
+  const drag = useRef({ active: false, startY: 0, startTop: 0 });
+
+  const onSheetPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    drag.current = {
+      active: true,
+      startY: e.clientY,
+      startTop: sheetSnap === "collapsed" ? SHEET_COLLAPSED : SHEET_EXPANDED,
+    };
+    if (sheetRef.current) sheetRef.current.style.transition = "none";
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onSheetPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current.active || !sheetRef.current) return;
+    const delta = e.clientY - drag.current.startY;
+    const top = Math.max(SHEET_EXPANDED, Math.min(SHEET_COLLAPSED, drag.current.startTop + delta));
+    sheetRef.current.style.top = `${top}px`;
+  };
+
+  const onSheetPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current.active || !sheetRef.current) return;
+    drag.current.active = false;
+    const delta = e.clientY - drag.current.startY;
+    const rawTop = Math.max(SHEET_EXPANDED, Math.min(SHEET_COLLAPSED, drag.current.startTop + delta));
+    const next = rawTop < (SHEET_COLLAPSED + SHEET_EXPANDED) / 2 ? "expanded" : "collapsed";
+    const targetTop = next === "collapsed" ? SHEET_COLLAPSED : SHEET_EXPANDED;
+    sheetRef.current.style.transition = "top 0.45s cubic-bezier(0.32, 0.72, 0, 1)";
+    sheetRef.current.style.top = `${targetTop}px`;
+    setSheetSnap(next);
+  };
 
   const results = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase("uk");
@@ -147,14 +184,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="static-sheet" aria-hidden="true">
-          <div className="handle" />
-          <article className="notice-card">
-            <div>
-              <h2>Подорожуйте Україною</h2>
-              <p>Знаходьте потрібні рейси та купуйте квитки онлайн.</p>
-            </div>
-          </article>
+        <section className="static-sheet" ref={sheetRef as React.RefObject<HTMLElement>} aria-hidden="true">
+          <div
+            className="sheet-handle-area"
+            onPointerDown={onSheetPointerDown}
+            onPointerMove={onSheetPointerMove}
+            onPointerUp={onSheetPointerUp}
+            onPointerCancel={onSheetPointerUp}
+          >
+            <div className="handle" />
+          </div>
+          <BottomSheetContent />
         </section>
 
         <div className={`picker ${activeField ? "open" : ""}`} aria-hidden={!activeField}>
