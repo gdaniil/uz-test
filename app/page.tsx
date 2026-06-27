@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { BottomNav } from "./components/BottomNav";
 import { BottomSheetContent } from "./components/BottomSheetContent";
+import { DatePickerSheet } from "./components/DatePickerSheet";
 
 type Field = "from" | "to";
 
@@ -29,6 +30,14 @@ const stations: Station[] = [
   { city: "Краматорськ", station: "Краматорськ" },
 ];
 
+const MONTHS_SHORT = ["Січ", "Лют", "Бер", "Кві", "Тра", "Чер", "Лип", "Сер", "Вер", "Жов", "Лис", "Гру"];
+const DAYS_SHORT = ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+
+function formatDate(date: Date | null): string {
+  if (!date) return "Дата відправлення";
+  return `${date.getDate()} ${MONTHS_SHORT[date.getMonth()]}, ${DAYS_SHORT[date.getDay()]}`;
+}
+
 const SHEET_COLLAPSED = 454;
 const SHEET_EXPANDED = 48;
 
@@ -37,6 +46,8 @@ export default function Home() {
   const [to, setTo] = useState<Station | null>(null);
   const [activeField, setActiveField] = useState<Field | null>(null);
   const [query, setQuery] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const sheetRef = useRef<HTMLElement>(null);
@@ -180,7 +191,14 @@ export default function Home() {
 
           <div className="dates-panel">
             <div className="date-row">
-              <div><img src="/icons/search-calendar.svg" alt="" /><span>22 Жовтня</span></div>
+              <button
+                type="button"
+                className="date-trigger"
+                onClick={() => setShowDatePicker(true)}
+              >
+                <img src="/icons/search-calendar.svg" alt="" />
+                <span>{formatDate(selectedDate)}</span>
+              </button>
               <div><img src="/icons/search-add.svg" alt="" /><span>Зворотний<br />квиток</span></div>
             </div>
 
@@ -188,6 +206,7 @@ export default function Home() {
               Знайти
             </button>
           </div>
+
         </section>
 
         <section
@@ -266,6 +285,13 @@ export default function Home() {
             </div>
           </section>
         </div>
+
+        <DatePickerSheet
+          open={showDatePicker}
+          selected={selectedDate}
+          onSelect={(date) => setSelectedDate(date)}
+          onClose={() => setShowDatePicker(false)}
+        />
 
         <BottomNav active="search" />
       </section>

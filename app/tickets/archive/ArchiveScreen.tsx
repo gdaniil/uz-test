@@ -122,7 +122,7 @@ export function ArchiveScreen() {
     <div className="archive-page">
       <header className="archive-header">
         <Link className="archive-back-btn" href="/tickets" aria-label="Назад до квитків">
-          <img src="/icons/archive-back-liquid-glass.png" alt="" />
+          <img src="/icons/archive-back-liquid-glass.svg" alt="" width={32} height={32} />
         </Link>
         <h1>Архів</h1>
         <span className="archive-header-spacer" aria-hidden />
