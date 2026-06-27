@@ -43,7 +43,13 @@ export default function Home() {
   const [sheetSnap, setSheetSnap] = useState<"collapsed" | "expanded">("collapsed");
   const drag = useRef({ active: false, startY: 0, startTop: 0 });
 
-  const onSheetPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+  const onSheetPointerDown = (e: React.PointerEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    const startedOnHandle = Boolean(target.closest(".sheet-handle-area"));
+    const startedInScrollableContent = Boolean(target.closest(".sheet-scroll"));
+
+    if (sheetSnap === "expanded" && startedInScrollableContent && !startedOnHandle) return;
+
     drag.current = {
       active: true,
       startY: e.clientY,
@@ -53,14 +59,14 @@ export default function Home() {
     e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  const onSheetPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  const onSheetPointerMove = (e: React.PointerEvent<HTMLElement>) => {
     if (!drag.current.active || !sheetRef.current) return;
     const delta = e.clientY - drag.current.startY;
     const top = Math.max(SHEET_EXPANDED, Math.min(SHEET_COLLAPSED, drag.current.startTop + delta));
     sheetRef.current.style.top = `${top}px`;
   };
 
-  const onSheetPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+  const onSheetPointerUp = (e: React.PointerEvent<HTMLElement>) => {
     if (!drag.current.active || !sheetRef.current) return;
     drag.current.active = false;
     const delta = e.clientY - drag.current.startY;
@@ -184,13 +190,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="static-sheet" ref={sheetRef as React.RefObject<HTMLElement>} aria-hidden="true">
+        <section
+          className={`static-sheet ${sheetSnap === "collapsed" ? "is-collapsed" : "is-expanded"}`}
+          ref={sheetRef as React.RefObject<HTMLElement>}
+          aria-hidden="true"
+          onPointerDown={onSheetPointerDown}
+          onPointerMove={onSheetPointerMove}
+          onPointerUp={onSheetPointerUp}
+          onPointerCancel={onSheetPointerUp}
+        >
           <div
             className="sheet-handle-area"
-            onPointerDown={onSheetPointerDown}
-            onPointerMove={onSheetPointerMove}
-            onPointerUp={onSheetPointerUp}
-            onPointerCancel={onSheetPointerUp}
           >
             <div className="handle" />
           </div>

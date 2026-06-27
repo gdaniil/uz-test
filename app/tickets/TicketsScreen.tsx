@@ -1,4 +1,7 @@
+import Link from "next/link";
+
 type TicketData = {
+  id: string;
   date: string;
   labels: { text: string; bg: string }[];
   departure: { time: string; station: string };
@@ -12,6 +15,7 @@ type TicketData = {
 
 const TICKETS: TicketData[] = [
   {
+    id: "kyiv-zhmerynka-2024-10-22",
     date: "22 Жовтня, п'ятниця",
     labels: [
       { text: "116K", bg: "#213786" },
@@ -25,6 +29,7 @@ const TICKETS: TicketData[] = [
     showButton: true,
   },
   {
+    id: "zhmerynka-kyiv-2024-10-25",
     date: "25 Жовтня, понеділок",
     labels: [{ text: "116K", bg: "#213786" }],
     departure: { time: "15:17", station: "Жмеринка" },
@@ -37,7 +42,28 @@ const TICKETS: TicketData[] = [
     },
     passengerCount: 2,
   },
+  {
+    id: "kyiv-darnytsia-2024-10-25",
+    date: "25 Жовтня, понеділок",
+    labels: [{ text: "D1", bg: "#213786" }],
+    departure: { time: "21:32", station: "Київ" },
+    arrival: { time: "21:48", station: "Дарниця" },
+    duration: "16 хв",
+    passengerCount: 2,
+  },
 ];
+
+const TICKET_GROUPS = TICKETS.reduce<{ date: string; tickets: TicketData[] }[]>((groups, ticket) => {
+  const currentGroup = groups.at(-1);
+
+  if (currentGroup?.date === ticket.date) {
+    currentGroup.tickets.push(ticket);
+  } else {
+    groups.push({ date: ticket.date, tickets: [ticket] });
+  }
+
+  return groups;
+}, []);
 
 function HistoryIcon() {
   return (
@@ -175,17 +201,19 @@ export function TicketsScreen() {
     <div className="tickets-page">
       <div className="tickets-header-row">
         <h1 className="tickets-title">Придбані квитки</h1>
-        <button className="archive-btn" type="button">
+        <Link className="archive-btn" href="/tickets/archive">
           <HistoryIcon />
           Архів
-        </button>
+        </Link>
       </div>
 
       <div className="tickets-content">
-        {TICKETS.map((ticket) => (
-          <div key={ticket.date} className="ticket-group">
-            <div className="ticket-date">{ticket.date}</div>
-            <TicketCard ticket={ticket} />
+        {TICKET_GROUPS.map((group) => (
+          <div key={group.date} className="ticket-group">
+            <div className="ticket-date">{group.date}</div>
+            {group.tickets.map((ticket) => (
+              <TicketCard key={ticket.id} ticket={ticket} />
+            ))}
           </div>
         ))}
       </div>
