@@ -1,9 +1,4 @@
-import type { Viewport } from "next";
 import { TicketOpenScreen } from "./TicketOpenScreen";
-
-export const viewport: Viewport = {
-  themeColor: "#eff1f6",
-};
 
 type OpenTicketPageProps = {
   params: Promise<{ ticketId: string }>;
