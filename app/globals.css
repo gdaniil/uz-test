@@ -3557,7 +3557,6 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 
 .passenger-phone {
   background: #04060b;
-  --keyboard-offset: 0px;
 }
 
 .passenger-header {
@@ -3800,7 +3799,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   z-index: 20;
   left: 16px;
   right: 16px;
-  bottom: calc(16px + env(safe-area-inset-bottom) + var(--keyboard-offset));
+  bottom: calc(16px + env(safe-area-inset-bottom));
   height: 80px;
   border: 1px solid rgba(255, 255, 255, .55);
   border-radius: 24px;
