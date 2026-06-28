@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 
@@ -24,6 +24,21 @@ type Train = {
   from: string;
   to: string;
   classes: TrainClass[];
+};
+type TransferTrain = {
+  id: string;
+  service: string;
+  operators: "suburban" | "bus";
+  depart: string;
+  arrive: string;
+  duration: string;
+  from: string;
+  to: string;
+  transfer: {
+    title: string;
+    details: string[];
+    price: string;
+  };
 };
 
 const trains: Train[] = [
@@ -54,6 +69,39 @@ const trains: Train[] = [
       { label: "Купе", seats: 36, price: "434 ₴" },
       { label: "Люкс", seats: 21, price: "1 021 ₴" },
     ],
+  },
+];
+
+const transferTrains: TransferTrain[] = [
+  {
+    id: "transfer-polissia-743",
+    service: "дальній + приміський",
+    operators: "suburban",
+    depart: "11:21",
+    arrive: "21:08",
+    duration: "5 год 51 хв",
+    from: "Київ-Пасажирський",
+    to: "Підзамче",
+    transfer: {
+      title: "1 пересадка",
+      details: ["Полтава: 2 год 21 хв"],
+      price: "від 1434 ₴",
+    },
+  },
+  {
+    id: "transfer-darnytsia-080",
+    service: "дальній + автобус",
+    operators: "bus",
+    depart: "23:39",
+    arrive: "11:08",
+    duration: "5 год 51 хв",
+    from: "Київ-Пасажирський",
+    to: "Підзамче",
+    transfer: {
+      title: "2 пересадки",
+      details: ["Полтава: 2 год 21 хв", "Кропивницький 45 хв"],
+      price: "від 1434 ₴",
+    },
   },
 ];
 
@@ -184,6 +232,48 @@ function NoSeatsIcon() {
   );
 }
 
+function SuburbanOperatorsIcon() {
+  return (
+    <svg className="tl-operators-icon" width="56" height="32" viewBox="0 0 56 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <rect x="24.5" y="0.5" width="31" height="31" rx="15.5" fill="white"/>
+      <rect x="24.5" y="0.5" width="31" height="31" rx="15.5" stroke="#D5DAE7"/>
+      <g clipPath="url(#suburban-clip-a)">
+        <path d="M41.6668 10.1667C41.2248 10.1667 40.8009 10.3423 40.4883 10.6548C40.1758 10.9674 40.0002 11.3913 40.0002 11.8334V20.1667C40.0002 20.6087 39.8246 21.0326 39.512 21.3452C39.1994 21.6578 38.7755 21.8334 38.3335 21.8334" stroke="#213786" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M32.5 20.1667H35.8333V23.5H32.5V20.1667Z" fill="#213786" stroke="#213786" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M44.1665 8.5H47.4998V11.8333H44.1665V8.5Z" fill="#213786" stroke="#213786" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </g>
+      <rect x="0.5" y="0.5" width="31" height="31" rx="15.5" fill="white"/>
+      <rect x="0.5" y="0.5" width="31" height="31" rx="15.5" stroke="#D5DAE7"/>
+      <g clipPath="url(#suburban-clip-b)">
+        <path d="M21.9805 16.875L24.333 21.8613H9.33301L9.3584 16.875H21.9805ZM16.0215 10.167C16.8083 10.1603 17.5823 10.3666 18.2607 10.7646C18.9391 11.1627 19.4967 11.7371 19.874 12.4267L21.1641 15.1523H9.33594V10.167H16.0215Z" fill="#213786"/>
+      </g>
+      <defs>
+        <clipPath id="suburban-clip-a"><rect width="20" height="20" fill="white" transform="translate(30 6)"/></clipPath>
+        <clipPath id="suburban-clip-b"><rect width="20" height="20" fill="white" transform="translate(6 6)"/></clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+function BusOperatorsIcon() {
+  return (
+    <svg className="tl-operators-icon" width="56" height="32" viewBox="0 0 56 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <rect x="24" width="32" height="32" rx="16" fill="#64D900"/>
+      <rect x="24.5" y="0.5" width="31" height="31" rx="15.5" stroke="#D5DAE7"/>
+      <text x="40" y="13" textAnchor="middle" fill="white" fontSize="7" fontWeight="800">FLIX</text>
+      <text x="40" y="21" textAnchor="middle" fill="white" fontSize="7" fontWeight="800">BUS</text>
+      <rect x="0.5" y="0.5" width="31" height="31" rx="15.5" fill="white"/>
+      <rect x="0.5" y="0.5" width="31" height="31" rx="15.5" stroke="#D5DAE7"/>
+      <g clipPath="url(#bus-clip-a)">
+        <path d="M21.9805 16.875L24.333 21.8613H9.33301L9.3584 16.875H21.9805ZM16.0215 10.167C16.8083 10.1603 17.5823 10.3666 18.2607 10.7646C18.9391 11.1627 19.4967 11.7371 19.874 12.4267L21.1641 15.1523H9.33594V10.167H16.0215Z" fill="#213786"/>
+      </g>
+      <defs>
+        <clipPath id="bus-clip-a"><rect width="20" height="20" fill="white" transform="translate(6 6)"/></clipPath>
+      </defs>
+    </svg>
+  );
+}
+
 
 function TrainCard({ train }: { train: Train }) {
   return (
@@ -227,13 +317,66 @@ function TrainCard({ train }: { train: Train }) {
   );
 }
 
+function TransferTrainCard({ train }: { train: TransferTrain }) {
+  const isTallTransfer = train.operators === "bus";
+
+  return (
+    <div className="tl-card tl-transfer-card">
+      <div className="tl-transfer-head">
+        <div className="tl-operators" aria-hidden>
+          {train.operators === "suburban" ? <SuburbanOperatorsIcon /> : <BusOperatorsIcon />}
+        </div>
+        <span>{train.service}</span>
+      </div>
+
+      <div className="tl-route">
+        <div className="tl-endpoint">
+          <strong>{train.depart}</strong>
+          <span>{train.from}</span>
+        </div>
+        <div className="tl-line" aria-hidden>
+          <span className="tl-dot tl-dot-l" />
+          <span className="tl-track" />
+          <span className="tl-duration-badge">{train.duration}</span>
+          <span className="tl-dot tl-dot-r" />
+        </div>
+        <div className="tl-endpoint tl-endpoint-right">
+          <strong>{train.arrive}</strong>
+          <span>{train.to}</span>
+        </div>
+      </div>
+
+      <div className={`tl-transfer-details${isTallTransfer ? " tall" : ""}`}>
+        <div className="tl-transfer-copy">
+          <TransferIcon />
+          <div>
+            <strong>{train.transfer.title}</strong>
+            {train.transfer.details.map((detail) => (
+              <span key={detail}>{detail}</span>
+            ))}
+          </div>
+        </div>
+        <strong className="tl-transfer-price">{train.transfer.price}</strong>
+      </div>
+    </div>
+  );
+}
+
 export function SearchResultsScreen({ params }: { params: Params }) {
+  const [showTransfers, setShowTransfers] = useState(false);
   const from = first(params.from, "Київ");
   const to = first(params.to, "Полтава");
   const fromStation = first(params.fromStation, from);
   const toStation = first(params.toStation, to);
   const selectedDate = parseDate(first(params.date, ""));
   const visibleDates = buildDateStrip(selectedDate);
+  const searchQuery = {
+    from,
+    fromStation,
+    to,
+    toStation,
+    date: `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`,
+  };
 
   return (
     <>
@@ -246,7 +389,7 @@ export function SearchResultsScreen({ params }: { params: Params }) {
                 <HeaderBackIcon />
               </Link>
               <div className="results-route-head">
-                <h1>116К {from} — {to}</h1>
+                <h1>{from} — {to}</h1>
                 <p>{formatCompactDate(selectedDate)}</p>
               </div>
               <button className="results-info" type="button" aria-label="Інформація">
@@ -303,7 +446,12 @@ export function SearchResultsScreen({ params }: { params: Params }) {
               <button className="tl-filter-icon-btn" type="button" aria-label="Сортування та фільтри">
                 <SortIcon />
               </button>
-              <button className="tl-filter-pill" type="button">
+              <button
+                className={`tl-filter-pill${showTransfers ? " active" : ""}`}
+                type="button"
+                aria-pressed={showTransfers}
+                onClick={() => setShowTransfers((value) => !value)}
+              >
                 <TransferIcon />
                 з пересадками
               </button>
@@ -313,10 +461,17 @@ export function SearchResultsScreen({ params }: { params: Params }) {
               </button>
             </div>
 
-            {trains.map((train) => (
-              <Link key={train.number} className="tl-card-link" href="/search/seats">
-                <TrainCard train={train} />
-              </Link>
+            {trains.map((train, index) => (
+              <Fragment key={train.number}>
+                <Link className="tl-card-link" href={{ pathname: "/search/seats", query: searchQuery }}>
+                  <TrainCard train={train} />
+                </Link>
+                {showTransfers && transferTrains[index] && (
+                  <Link className="tl-card-link" href={{ pathname: "/search/seats", query: searchQuery }}>
+                    <TransferTrainCard train={transferTrains[index]} />
+                  </Link>
+                )}
+              </Fragment>
             ))}
 
             <button className="tl-watch-btn" type="button">

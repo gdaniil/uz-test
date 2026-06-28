@@ -621,9 +621,15 @@ function PassengerCard({ ticket }: { ticket: OpenTicket }) {
   );
 }
 
+function seatRailClass(x: number, y: number) {
+  if (y === 16) return "has-rail-top";
+  if (y === 66) return "has-rail-bottom";
+  return Math.round(x / 52) % 2 === 0 ? "has-rail-top" : "has-rail-bottom";
+}
+
 function Seat({ n, x, y = 6, shelf, selected }: { n: string; x: number; y?: number; shelf?: boolean; selected?: boolean }) {
   return (
-    <div className={`wagon-seat${shelf ? " shelf" : ""}${selected ? " selected" : ""}`} style={{ left: x, top: y }}>
+    <div className={`wagon-seat ${seatRailClass(x, y)}${shelf ? " shelf" : ""}${selected ? " selected" : ""}`} style={{ left: x, top: y }}>
       <span>{n}</span>
     </div>
   );
