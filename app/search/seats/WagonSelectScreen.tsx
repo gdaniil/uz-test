@@ -357,6 +357,18 @@ export function WagonSelectScreen({ params }: { params: Params }) {
       date: `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`,
     },
   };
+  const passengerHref = {
+    pathname: "/search/passengers",
+    query: {
+      from,
+      fromStation,
+      to,
+      toStation,
+      date: `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`,
+      ticketCount: String(selectedSeats.length),
+      seats: selectedSeats.join(","),
+    },
+  };
   const ticketLabel = formatTickets(selectedSeats.length);
   const totalPrice = new Intl.NumberFormat("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(selectedSeats.length * 203.96);
 
@@ -441,7 +453,7 @@ export function WagonSelectScreen({ params }: { params: Params }) {
                     <ChevronDown size={16} strokeWidth={2.4} />
                   </button>
                 </div>
-                <button className="results-next-button" type="button">Далі</button>
+                <Link className="results-next-button" href={passengerHref}>Далі</Link>
               </div>
             </div>
           )}
