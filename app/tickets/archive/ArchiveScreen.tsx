@@ -18,6 +18,35 @@ type ArchiveTrip = {
 
 const ARCHIVE_GROUPS: { month: string; trips: ArchiveTrip[] }[] = [
   {
+    month: "Лютий 2026",
+    trips: [
+      {
+        id: "kyiv-lviv-2026-02-08",
+        day: "8",
+        weekday: "Нд",
+        isWeekend: true,
+        route: "Київ → Львів",
+        train: "007К",
+        tickets: "1 квиток",
+        bonus: 612,
+      },
+    ],
+  },
+  {
+    month: "Листопад 2025",
+    trips: [
+      {
+        id: "kyiv-odesa-2025-11-14",
+        day: "14",
+        weekday: "Пт",
+        route: "Київ → Одеса-Головна",
+        train: "049К",
+        tickets: "2 квитки",
+        bonus: 1830,
+      },
+    ],
+  },
+  {
     month: "Жовтень 2025",
     trips: [
       {
@@ -43,6 +72,20 @@ const ARCHIVE_GROUPS: { month: string; trips: ArchiveTrip[] }[] = [
     ],
   },
   {
+    month: "Серпень 2025",
+    trips: [
+      {
+        id: "kyiv-kharkiv-2025-08-22",
+        day: "22",
+        weekday: "Пт",
+        route: "Київ → Харків-Пасажирський",
+        train: "091Л",
+        tickets: "1 квиток",
+        bonus: 374,
+      },
+    ],
+  },
+  {
     month: "Квітень 2025",
     trips: [
       {
@@ -53,6 +96,35 @@ const ARCHIVE_GROUPS: { month: string; trips: ArchiveTrip[] }[] = [
         train: "080К",
         tickets: "1 квиток",
         bonus: 442,
+      },
+    ],
+  },
+  {
+    month: "Березень 2025",
+    trips: [
+      {
+        id: "dnipro-kyiv-2025-03-16",
+        day: "16",
+        weekday: "Нд",
+        isWeekend: true,
+        route: "Дніпро-Головний → Київ-Пасажирський",
+        train: "741К",
+        tickets: "3 квитки",
+        bonus: 2214,
+      },
+    ],
+  },
+  {
+    month: "Вересень 2024",
+    trips: [
+      {
+        id: "kyiv-zaporizhzhia-2024-09-05",
+        day: "5",
+        weekday: "Чт",
+        route: "Київ → Запоріжжя-1",
+        train: "109Л",
+        tickets: "1 квиток",
+        bonus: 529,
       },
     ],
   },

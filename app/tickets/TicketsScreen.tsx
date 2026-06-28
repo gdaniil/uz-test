@@ -47,7 +47,7 @@ const TICKETS: TicketData[] = [
   {
     id: "kyiv-darnytsia-2024-10-25",
     date: "25 Жовтня, понеділок",
-    labels: [{ text: "D1", bg: "#213786" }],
+    labels: [{ text: "080О", bg: "#213786" }],
     departure: { time: "21:32", station: "Київ" },
     arrival: { time: "21:48", station: "Дарниця" },
     duration: "16 хв",

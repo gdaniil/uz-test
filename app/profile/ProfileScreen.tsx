@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 function UzBonusBadge() {
   return <img src="/icons/uz-bonus-silver.svg" alt="" width="40" height="40" style={{ flexShrink: 0 }} />;
 }
@@ -224,16 +226,22 @@ type ProfileRowProps = {
   sublabel?: string;
   icon: React.ReactNode;
   isLast?: boolean;
+  href?: string;
 };
 
-function ProfileRow({ label, sublabel, icon, isLast }: ProfileRowProps) {
-  return (
-    <div className={`profile-row${isLast ? " profile-row-last" : ""}`}>
+function ProfileRow({ label, sublabel, icon, isLast, href }: ProfileRowProps) {
+  const className = `profile-row${isLast ? " profile-row-last" : ""}`;
+  const inner = (
+    <>
       <span className="profile-row-label">{label}</span>
       {sublabel && <span className="profile-row-sublabel">{sublabel}</span>}
       <div className="profile-row-icon">{icon}</div>
-    </div>
+    </>
   );
+  if (href) {
+    return <Link href={href} className={className} style={{ textDecoration: "none" }}>{inner}</Link>;
+  }
+  return <div className={className}>{inner}</div>;
 }
 
 export function ProfileScreen() {
@@ -270,7 +278,7 @@ export function ProfileScreen() {
             <ProfileRow label="Мої дані" icon={<AvatarIcon />} />
             <ProfileRow label="Пасажири" icon={<PeopleIcon />} />
             <ProfileRow label="Платіжні картки" icon={<CardIcon />} />
-            <ProfileRow label="Сповіщення" icon={<BellIcon />} />
+            <ProfileRow label="Сповіщення" icon={<BellIcon />} href="/notifications" />
             <ProfileRow label="Мова" sublabel="Українська (UA)" icon={<GlobeIcon />} />
             <ProfileRow label="Тема" sublabel="Світла" icon={<SunIcon />} isLast />
           </div>

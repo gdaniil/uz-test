@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { BottomNav } from "./components/BottomNav";
@@ -157,9 +158,9 @@ export function HomeScreen() {
               <img src="/icons/uz-bonus-silver.svg" alt="" />
               <span>1500</span>
             </button>
-            <button className="header-icon-button" type="button" aria-label="Сповіщення">
+            <Link href="/notifications" className="header-icon-button" aria-label="Сповіщення">
               <img src="/icons/notification-muted.svg" alt="" />
-            </button>
+            </Link>
           </div>
         </header>
 
