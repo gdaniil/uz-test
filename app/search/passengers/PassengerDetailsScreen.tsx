@@ -45,27 +45,30 @@ function PassengerChip({ initials, name, tone, image }: { initials: string; name
   );
 }
 
-function TextField({ label, autoFocus }: { label: string; autoFocus?: boolean }) {
+function TextField({ label, autoFocus, fieldKey }: { label: string; autoFocus?: boolean; fieldKey: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!autoFocus) return;
-    const focusTimer = window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 80);
+    const focusTimer = window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 120);
     return () => window.clearTimeout(focusTimer);
   }, [autoFocus]);
 
   return (
-    <label className="passenger-field">
+    <div className="passenger-field">
       <span>{label}</span>
       <input
         ref={inputRef}
-        aria-label={label}
-        autoComplete="new-password"
+        aria-label="Passenger detail"
+        autoCapitalize="words"
+        autoComplete="off"
         autoCorrect="off"
         autoFocus={autoFocus}
+        id={`passenger-detail-${fieldKey}`}
+        name={`passenger-detail-${fieldKey}`}
         spellCheck={false}
       />
-    </label>
+    </div>
   );
 }
 
@@ -103,6 +106,7 @@ function Toggle() {
 }
 
 export function PassengerDetailsScreen({ params }: { params: Params }) {
+  const phoneRef = useRef<HTMLElement>(null);
   const from = first(params.from, "Київ");
   const to = first(params.to, "Жмеринка");
   const fromStation = first(params.fromStation, from);
@@ -114,11 +118,37 @@ export function PassengerDetailsScreen({ params }: { params: Params }) {
     query: { from, fromStation, to, toStation, date },
   };
 
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    const phone = phoneRef.current;
+    if (!viewport || !phone) return;
+    const visualViewport = viewport;
+    const phoneElement = phone;
+
+    function syncKeyboardOffset() {
+      const phoneBottom = phoneElement.getBoundingClientRect().bottom;
+      const keyboardTop = visualViewport.offsetTop + visualViewport.height;
+      const keyboardOverlap = Math.max(0, phoneBottom - keyboardTop);
+      phoneElement.style.setProperty("--keyboard-offset", `${Math.round(keyboardOverlap)}px`);
+    }
+
+    syncKeyboardOffset();
+    visualViewport.addEventListener("resize", syncKeyboardOffset);
+    visualViewport.addEventListener("scroll", syncKeyboardOffset);
+    window.addEventListener("resize", syncKeyboardOffset);
+
+    return () => {
+      visualViewport.removeEventListener("resize", syncKeyboardOffset);
+      visualViewport.removeEventListener("scroll", syncKeyboardOffset);
+      window.removeEventListener("resize", syncKeyboardOffset);
+    };
+  }, []);
+
   return (
     <>
       <div aria-hidden="true" className="results-status-tint" />
       <main className="stage">
-        <section className="phone results-phone passenger-phone" aria-label="Дані пасажирів">
+        <section ref={phoneRef} className="phone results-phone passenger-phone" aria-label="Дані пасажирів">
           <header className="results-header passenger-header">
             <div className="results-header-main">
               <Link className="results-back" href={seatsHref} aria-label="Назад до вибору місць">
@@ -158,8 +188,8 @@ export function PassengerDetailsScreen({ params }: { params: Params }) {
           <section className="passenger-sheet">
             <div className="passenger-content">
               <div className="passenger-form-card">
-                <TextField label="Прізвище" autoFocus />
-                <TextField label="Ім’я" />
+                <TextField label="Прізвище" fieldKey="a" autoFocus />
+                <TextField label="Ім’я" fieldKey="b" />
               </div>
 
               <button className="passenger-add-benefit" type="button">
