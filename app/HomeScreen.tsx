@@ -39,6 +39,14 @@ function formatDate(date: Date | null): string {
   return `${date.getDate()} ${MONTHS_SHORT[date.getMonth()]}, ${DAYS_SHORT[date.getDay()]}`;
 }
 
+function toDateParam(date: Date | null): string {
+  const value = date ?? new Date();
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, "0");
+  const day = String(value.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const SHEET_COLLAPSED = 454;
 const SHEET_EXPANDED = 48;
 
@@ -145,6 +153,17 @@ export function HomeScreen() {
     setTo(from);
   };
 
+  const searchHref = {
+    pathname: "/search/results",
+    query: {
+      from: from?.city ?? "Київ",
+      fromStation: from?.station ?? "Київ-Пасажирський",
+      to: to?.city ?? "Жмеринка",
+      toStation: to?.station ?? "Жмеринка",
+      date: toDateParam(selectedDate),
+    },
+  };
+
   return (
     <>
       {/* iOS 26 Safari reads the topmost position:fixed element's background for the status bar tint */}
@@ -210,9 +229,9 @@ export function HomeScreen() {
               <div><img src="/icons/search-add.svg" alt="" /><span>Зворотний<br />квиток</span></div>
             </div>
 
-            <button className="search-button" type="button">
+            <Link className="search-button" href={searchHref}>
               Знайти
-            </button>
+            </Link>
           </div>
 
         </section>
