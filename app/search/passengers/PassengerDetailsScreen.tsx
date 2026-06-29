@@ -2,8 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { useLayoutEffect, useRef, useState } from "react";
-import { shouldRestorePassengerKeyboardFocus } from "../../components/MobileFocusBridge";
+import { useEffect, useState } from "react";
 
 type Params = Record<string, string | string[] | undefined>;
 
@@ -51,33 +50,15 @@ function PassengerChip({ href, initials, name, tone, image }: { href: PassengerC
   );
 }
 
-function TextField({ label, autoFocus, fieldKey }: { label: string; autoFocus?: boolean; fieldKey: string }) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useLayoutEffect(() => {
-    if (!autoFocus) return;
-
-    const focusInput = () => inputRef.current?.focus({ preventScroll: true });
-    focusInput();
-
-    const timers = [
-      window.setTimeout(focusInput, shouldRestorePassengerKeyboardFocus() ? 0 : 120),
-      window.setTimeout(focusInput, 220),
-    ];
-
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, [autoFocus]);
-
+function TextField({ label, fieldKey }: { label: string; fieldKey: string }) {
   return (
     <div className="passenger-field">
       <span>{label}</span>
       <input
-        ref={inputRef}
         aria-label="Passenger detail"
         autoCapitalize="words"
         autoComplete="off"
         autoCorrect="off"
-        autoFocus={autoFocus}
         id={`passenger-detail-${fieldKey}`}
         name={`passenger-detail-${fieldKey}`}
         spellCheck={false}
@@ -135,6 +116,23 @@ export function PassengerDetailsScreen({ params }: { params: Params }) {
     query: { from, fromStation, to, toStation, date, ticketCount },
   };
 
+  useEffect(() => {
+    const blurActiveInput = () => {
+      const activeElement = document.activeElement;
+      if (activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement) {
+        activeElement.blur();
+      }
+    };
+
+    blurActiveInput();
+    const timers = [
+      window.setTimeout(blurActiveInput, 0),
+      window.setTimeout(blurActiveInput, 150),
+    ];
+
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, []);
+
   return (
     <>
       <div aria-hidden="true" className="results-status-tint" />
@@ -179,7 +177,7 @@ export function PassengerDetailsScreen({ params }: { params: Params }) {
           <section className="passenger-sheet">
             <div className="passenger-content">
               <div className="passenger-form-card">
-                <TextField label="Прізвище" fieldKey="a" autoFocus />
+                <TextField label="Прізвище" fieldKey="a" />
                 <TextField label="Ім’я" fieldKey="b" />
               </div>
 

@@ -169,17 +169,17 @@ export function CheckoutScreen({ params }: { params: Params }) {
               <TicketBlock
                 wagon="Вагон 5, місце 44"
                 passenger="Веніамін Матусевич"
-                total="313.96 ₴"
+                total="313,96 ₴"
                 services={[
-                  ["+ Постіль", "80 ₴"],
-                  ["+ Вода (0.5л)", "15 ₴"],
+                  ["+ Постіль", "80,00 ₴"],
+                  ["+ Вода (0.5л)", "15,00 ₴"],
                 ]}
               />
               <TicketBlock
                 wagon="Вагон 5, місце 33"
                 passenger="Єлизавета Рєзнік"
-                total="253.96 ₴"
-                services={[["+ Бойовий чай ", "25 ₴"]]}
+                total="253,96 ₴"
+                services={[["+ Бойовий чай ", "25,00 ₴"]]}
               />
             </div>
 
@@ -188,15 +188,15 @@ export function CheckoutScreen({ params }: { params: Params }) {
             <div className="checkout-summary">
               <div className="checkout-row">
                 <span>Квитки</span>
-                <Money>500 ₴</Money>
+                <Money>500,00 ₴</Money>
               </div>
               <div className="checkout-row">
                 <span>Додаткові послуги</span>
-                <Money>67.92 ₴</Money>
+                <Money>67,92 ₴</Money>
               </div>
               <div className="checkout-row">
                 <span>Всього до сплати</span>
-                <Money>567.92 ₴</Money>
+                <Money>567,92 ₴</Money>
               </div>
             </div>
           </section>
@@ -211,7 +211,7 @@ export function CheckoutScreen({ params }: { params: Params }) {
             </div>
             <div className="checkout-pay-action">
               <div>
-                <strong>567.92 ₴</strong>
+                <strong>567,92 ₴</strong>
                 <span>До сплати</span>
               </div>
               <button type="button" aria-label="Оплатити Apple Pay" onClick={handlePay}>

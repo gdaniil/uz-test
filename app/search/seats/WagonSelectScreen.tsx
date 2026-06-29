@@ -3,7 +3,6 @@
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { requestPassengerKeyboardFocus } from "../../components/MobileFocusBridge";
 
 type Params = Record<string, string | string[] | undefined>;
 
@@ -454,15 +453,7 @@ export function WagonSelectScreen({ params }: { params: Params }) {
                     <ChevronDown size={16} strokeWidth={2.4} />
                   </button>
                 </div>
-                <Link
-                  className="results-next-button"
-                  href={passengerHref}
-                  onClick={requestPassengerKeyboardFocus}
-                  onPointerDown={requestPassengerKeyboardFocus}
-                  onTouchStart={requestPassengerKeyboardFocus}
-                >
-                  Далі
-                </Link>
+                <Link className="results-next-button" href={passengerHref}>Далі</Link>
               </div>
             </div>
           )}

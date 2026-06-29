@@ -40,18 +40,6 @@ body {
 button, input { font: inherit; }
 button { color: inherit; }
 
-.mobile-focus-bridge {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  border: 0;
-  opacity: .01;
-  pointer-events: none;
-}
-
 .stage { min-height: 100svh; display: grid; justify-items: center; align-items: start; }
 
 .phone {
@@ -4461,7 +4449,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 }
 
 .checkout-service {
-  padding-left: 8px;
+  padding-left: 16px;
   color: #6c6e75;
   font-size: 15px;
   font-weight: 400;

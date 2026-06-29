@@ -62,7 +62,6 @@ export function HomeScreen() {
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
   const sheetRef = useRef<HTMLElement>(null);
   const [sheetSnap, setSheetSnap] = useState<"collapsed" | "expanded">("collapsed");
   const drag = useRef({ active: false, startY: 0, startTop: 0 });
