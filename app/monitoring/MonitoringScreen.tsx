@@ -1,9 +1,10 @@
 "use client";
 
 import { BellRing, ChevronLeft, MoreVertical, Zap } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-type MonitorStatus = "searching" | "auto";
+type MonitorStatus = "searching" | "available" | "auto";
 
 type MonitorItem = {
   id: string;
@@ -13,6 +14,7 @@ type MonitorItem = {
   date: string;
   details: string;
   tags?: string[];
+  actionLabel?: string;
 };
 
 const ITEMS: MonitorItem[] = [
@@ -27,11 +29,12 @@ const ITEMS: MonitorItem[] = [
   },
   {
     id: "124391",
-    status: "searching",
+    status: "available",
     number: "#124391",
     route: "Жмеринка → Київ",
     date: "24 Жовтня, Пт ∙ 2 місця",
     details: "Купе, Люкс у потягах 080К, 116Л, 1100",
+    actionLabel: "Переглянути та купити",
   },
   {
     id: "124203",
@@ -44,33 +47,15 @@ const ITEMS: MonitorItem[] = [
   },
 ];
 
-function StatusBar() {
-  return (
-    <div className="monitoring-statusbar" aria-hidden="true">
-      <span className="monitoring-time">9:41</span>
-      <span className="monitoring-levels">
-        <span className="monitoring-cellular">
-          <i />
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="monitoring-wifi" />
-        <span className="monitoring-battery">
-          <i />
-        </span>
-      </span>
-    </div>
-  );
-}
-
 function StatusPill({ item }: { item: MonitorItem }) {
   const isAuto = item.status === "auto";
+  const isAvailable = item.status === "available";
+  const label = isAuto ? "Автоматично викупимо" : isAvailable ? "Зʼявилися вільні місця" : "Шукаємо місця";
 
   return (
-    <div className={`monitoring-card-status ${isAuto ? "is-auto" : "is-searching"}`}>
+    <div className={`monitoring-card-status is-${item.status}`}>
       {isAuto ? <Zap size={16} fill="currentColor" /> : <BellRing size={16} fill="currentColor" />}
-      <span>{isAuto ? "Автоматично викупимо" : "Шукаємо місця"}</span>
+      <span>{label}</span>
       <span className="monitoring-card-number">{item.number}</span>
       <MoreVertical size={16} />
     </div>
@@ -78,12 +63,14 @@ function StatusPill({ item }: { item: MonitorItem }) {
 }
 
 function MonitorCard({ item }: { item: MonitorItem }) {
+  const hasFooterContent = Boolean(item.tags?.length || item.actionLabel);
+
   return (
     <article className="monitoring-card">
       <div className="monitoring-card-status-wrap">
         <StatusPill item={item} />
       </div>
-      <div className={`monitoring-card-body ${item.tags?.length ? "has-tags" : ""}`}>
+      <div className={`monitoring-card-body ${hasFooterContent ? "has-footer-content" : ""}`}>
         <div className="monitoring-card-copy">
           <h2>{item.route}</h2>
           <p>{item.date}</p>
@@ -96,6 +83,11 @@ function MonitorCard({ item }: { item: MonitorItem }) {
             ))}
           </div>
         ) : null}
+        {item.actionLabel ? (
+          <Link className="monitoring-action" href="/search/results">
+            {item.actionLabel}
+          </Link>
+        ) : null}
       </div>
     </article>
   );
@@ -105,25 +97,21 @@ export function MonitoringScreen() {
   const router = useRouter();
 
   return (
-    <>
-      <div aria-hidden="true" className="monitoring-status-tint" />
-      <div className="monitoring-screen">
-        <StatusBar />
-        <header className="monitoring-header">
-          <button className="monitoring-back" type="button" aria-label="Назад" onClick={() => router.back()}>
-            <ChevronLeft size={20} strokeWidth={2.4} />
-          </button>
-          <h1>Відстежуються місця</h1>
-          <span className="monitoring-header-spacer" aria-hidden="true" />
-        </header>
-        <section className="monitoring-content" aria-label="Список відстежуваних місць">
-          <div className="monitoring-list">
-            {ITEMS.map((item) => (
-              <MonitorCard key={item.id} item={item} />
-            ))}
-          </div>
-        </section>
-      </div>
-    </>
+    <div className="monitoring-screen">
+      <header className="monitoring-header">
+        <button className="monitoring-back" type="button" aria-label="Назад" onClick={() => router.back()}>
+          <ChevronLeft size={20} strokeWidth={2.4} />
+        </button>
+        <h1>Відстежуються місця</h1>
+        <span className="monitoring-header-spacer" aria-hidden="true" />
+      </header>
+      <section className="monitoring-content" aria-label="Список відстежуваних місць">
+        <div className="monitoring-list">
+          {ITEMS.map((item) => (
+            <MonitorCard key={item.id} item={item} />
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
