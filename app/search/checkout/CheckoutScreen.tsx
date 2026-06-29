@@ -194,6 +194,10 @@ export function CheckoutScreen({ params }: { params: Params }) {
                 <span>Додаткові послуги</span>
                 <Money>67.92 ₴</Money>
               </div>
+              <div className="checkout-row">
+                <span>Всього до сплати</span>
+                <Money>567.92 ₴</Money>
+              </div>
             </div>
           </section>
 

@@ -4273,7 +4273,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 }
 
 .checkout-phone {
-  background: #8d560c;
+  background: #543103;
   color: #2c2e32;
 }
 
@@ -4282,7 +4282,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   z-index: 3;
   height: 54px;
   border-radius: 0 0 20px 20px;
-  padding: 8px 16px;
+  padding: 8px 24px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
