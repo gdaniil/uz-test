@@ -3967,8 +3967,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 }
 
 .services-passenger {
-  height: 64px;
-  padding: 8px 24px 10px;
+  height: 60px;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -4405,7 +4405,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 .checkout-tickets {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .checkout-ticket {
@@ -4448,7 +4448,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 .checkout-person {
   color: #2c2e32;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 16px;
   letter-spacing: .1px;
 }
