@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 type TicketData = {
   id: string;
@@ -105,6 +108,24 @@ function QrIcon() {
   );
 }
 
+function SuccessToastIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M9.67627 19.3525C14.9829 19.3525 19.3525 14.9829 19.3525 9.67627C19.3525 4.37891 14.9736 0 9.66699 0C4.36963 0 0 4.37891 0 9.67627C0 14.9829 4.36963 19.3525 9.67627 19.3525ZM8.64648 14.2871C8.26611 14.2871 7.96924 14.1201 7.69092 13.7769L5.45508 11.0864C5.26953 10.8545 5.18604 10.6318 5.18604 10.3813C5.18604 9.86182 5.59424 9.44434 6.11377 9.44434C6.41992 9.44434 6.66113 9.56494 6.90234 9.86182L8.61865 12.0142L12.3574 6.03955C12.5801 5.69629 12.8584 5.51074 13.1831 5.51074C13.6841 5.51074 14.1479 5.87256 14.1479 6.39209C14.1479 6.61475 14.0366 6.86523 13.8975 7.07861L9.56494 13.7676C9.34229 14.1016 9.01758 14.2871 8.64648 14.2871Z" fill="#1EBA5D" />
+    </svg>
+  );
+}
+
+function PurchaseToast() {
+  return (
+    <div className="tickets-toast" role="status" aria-live="polite">
+      <span className="tickets-toast-fill" aria-hidden />
+      <SuccessToastIcon />
+      <span>Квитки успішно придбано</span>
+    </div>
+  );
+}
+
 function TransferIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
@@ -208,9 +229,26 @@ function TicketCard({ ticket }: { ticket: TicketData }) {
   return cardContent;
 }
 
-export function TicketsScreen() {
+export function TicketsScreen({ showSuccessToast = false }: { showSuccessToast?: boolean }) {
+  const [isToastVisible, setIsToastVisible] = useState(showSuccessToast);
+
+  useEffect(() => {
+    if (!showSuccessToast) return;
+
+    setIsToastVisible(true);
+
+    const timer = window.setTimeout(() => {
+      setIsToastVisible(false);
+      window.history.replaceState(null, "", "/tickets");
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, [showSuccessToast]);
+
   return (
     <div className="tickets-page">
+      {isToastVisible && <PurchaseToast />}
+
       <div className="tickets-header-row">
         <h1 className="tickets-title">Придбані квитки</h1>
         <Link className="archive-btn" href="/tickets/archive">

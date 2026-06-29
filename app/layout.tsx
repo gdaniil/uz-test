@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { MobileFocusBridge } from "./components/MobileFocusBridge";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,7 +18,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="uk">
-      <body>{children}</body>
+      <body>
+        <MobileFocusBridge />
+        {children}
+      </body>
     </html>
   );
 }

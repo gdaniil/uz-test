@@ -2,7 +2,8 @@
 
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+import { shouldRestorePassengerKeyboardFocus } from "../../components/MobileFocusBridge";
 
 type Params = Record<string, string | string[] | undefined>;
 
@@ -34,24 +35,37 @@ function HeaderHourglassIcon() {
   );
 }
 
-function PassengerChip({ initials, name, tone, image }: { initials: string; name: string; tone: string; image?: string }) {
+type PassengerChipHref = {
+  pathname: string;
+  query: Record<string, string | number>;
+};
+
+function PassengerChip({ href, initials, name, tone, image }: { href: PassengerChipHref; initials: string; name: string; tone: string; image?: string }) {
   return (
-    <button className="passenger-chip" type="button">
+    <Link className="passenger-chip" href={href}>
       <span className="passenger-avatar" style={{ background: tone }}>
         {image ? <img src={image} alt="" /> : initials}
       </span>
       <strong>{name}</strong>
-    </button>
+    </Link>
   );
 }
 
 function TextField({ label, autoFocus, fieldKey }: { label: string; autoFocus?: boolean; fieldKey: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!autoFocus) return;
-    const focusTimer = window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 120);
-    return () => window.clearTimeout(focusTimer);
+
+    const focusInput = () => inputRef.current?.focus({ preventScroll: true });
+    focusInput();
+
+    const timers = [
+      window.setTimeout(focusInput, shouldRestorePassengerKeyboardFocus() ? 0 : 120),
+      window.setTimeout(focusInput, 220),
+    ];
+
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
   }, [autoFocus]);
 
   return (
@@ -106,7 +120,6 @@ function Toggle() {
 }
 
 export function PassengerDetailsScreen({ params }: { params: Params }) {
-  const phoneRef = useRef<HTMLElement>(null);
   const from = first(params.from, "Київ");
   const to = first(params.to, "Жмеринка");
   const fromStation = first(params.fromStation, from);
@@ -117,38 +130,16 @@ export function PassengerDetailsScreen({ params }: { params: Params }) {
     pathname: "/search/seats",
     query: { from, fromStation, to, toStation, date },
   };
-
-  useEffect(() => {
-    const viewport = window.visualViewport;
-    const phone = phoneRef.current;
-    if (!viewport || !phone) return;
-    const visualViewport = viewport;
-    const phoneElement = phone;
-
-    function syncKeyboardOffset() {
-      const phoneBottom = phoneElement.getBoundingClientRect().bottom;
-      const keyboardTop = visualViewport.offsetTop + visualViewport.height;
-      const keyboardOverlap = Math.max(0, phoneBottom - keyboardTop);
-      phoneElement.style.setProperty("--keyboard-offset", `${Math.round(keyboardOverlap)}px`);
-    }
-
-    syncKeyboardOffset();
-    visualViewport.addEventListener("resize", syncKeyboardOffset);
-    visualViewport.addEventListener("scroll", syncKeyboardOffset);
-    window.addEventListener("resize", syncKeyboardOffset);
-
-    return () => {
-      visualViewport.removeEventListener("resize", syncKeyboardOffset);
-      visualViewport.removeEventListener("scroll", syncKeyboardOffset);
-      window.removeEventListener("resize", syncKeyboardOffset);
-    };
-  }, []);
+  const servicesHref = {
+    pathname: "/search/passengers/services",
+    query: { from, fromStation, to, toStation, date, ticketCount },
+  };
 
   return (
     <>
       <div aria-hidden="true" className="results-status-tint" />
       <main className="stage">
-        <section ref={phoneRef} className="phone results-phone passenger-phone" aria-label="Дані пасажирів">
+        <section className="phone results-phone passenger-phone" aria-label="Дані пасажирів">
           <header className="results-header passenger-header">
             <div className="results-header-main">
               <Link className="results-back" href={seatsHref} aria-label="Назад до вибору місць">
@@ -180,9 +171,9 @@ export function PassengerDetailsScreen({ params }: { params: Params }) {
           </header>
 
           <nav className="passenger-chips" aria-label="Збережені пасажири">
-            <PassengerChip initials="ЄР" name="Єлизавета Р." tone="#c53d3d" />
-            <PassengerChip initials="ВМ" name="Веніамін М." tone="#d7d8df" image="https://www.figma.com/api/mcp/asset/1243d348-a14d-40cd-a4b1-904d983604a4" />
-            <PassengerChip initials="АА" name="Альберт А." tone="#3d5fc5" />
+            <PassengerChip href={servicesHref} initials="ЄР" name="Єлизавета Р." tone="#c53d3d" />
+            <PassengerChip href={servicesHref} initials="ВМ" name="Веніамін М." tone="#d7d8df" image="https://www.figma.com/api/mcp/asset/1243d348-a14d-40cd-a4b1-904d983604a4" />
+            <PassengerChip href={servicesHref} initials="АА" name="Альберт А." tone="#3d5fc5" />
           </nav>
 
           <section className="passenger-sheet">
@@ -209,7 +200,7 @@ export function PassengerDetailsScreen({ params }: { params: Params }) {
               <strong>343.96 ₴</strong>
               <span>Вартість квитка</span>
             </div>
-            <button type="button">Підтвердити</button>
+            <Link href={servicesHref}>Підтвердити</Link>
           </div>
         </section>
       </main>
