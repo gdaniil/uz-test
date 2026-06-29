@@ -239,12 +239,45 @@ button { color: inherit; }
 .info-card-text { font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 15px; font-weight: 400; line-height: 20px; letter-spacing: 0.1px; color: rgba(44,42,41,0.8); margin: 0; }
 .info-card-link { display: flex; align-items: center; gap: 12px; font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 15px; font-weight: 600; line-height: 20px; letter-spacing: 0.1px; color: #2c2e32; white-space: nowrap; }
 
-.tabbar {
+.tabbar-shell {
   position: absolute;
   z-index: 40;
   left: 12px;
   right: 12px;
   bottom: calc(20px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  height: 60px;
+  pointer-events: none;
+}
+
+.tabbar-shell > * {
+  pointer-events: auto;
+}
+
+.tabbar-shell-monitoring::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 96px;
+  border: 1px solid rgba(255, 255, 255, .34);
+  border-radius: 34px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, .12) 42%, rgba(255, 255, 255, .24)),
+    rgba(255, 255, 255, .20);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, .22),
+    0 18px 44px rgba(12, 23, 64, .16),
+    inset 0 1px 0 rgba(255, 255, 255, .36),
+    inset 0 -1px 0 rgba(255, 255, 255, .10);
+  backdrop-filter: blur(24px) saturate(180%) contrast(108%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%) contrast(108%);
+  pointer-events: none;
+}
+
+.tabbar {
+  position: relative;
   box-sizing: border-box;
   height: 60px;
   padding: 4px;
@@ -264,6 +297,431 @@ button { color: inherit; }
     inset 0 -1px 0 rgba(255, 255, 255, .10);
   backdrop-filter: blur(24px) saturate(180%) contrast(108%);
   -webkit-backdrop-filter: blur(24px) saturate(180%) contrast(108%);
+}
+
+.tabbar-monitoring-banner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  height: 36px;
+  padding: 0 32px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 32px 32px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--brand);
+  background: transparent;
+  box-shadow: none;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tabbar-shell-monitoring .tabbar {
+  border: 0;
+  border-radius: 0 0 34px 34px;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.tabbar-shell-monitoring .tabbar::before,
+.tabbar-shell-monitoring .tabbar::after {
+  display: none;
+}
+
+/* Monitoring */
+.monitoring-status-tint {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: max(env(safe-area-inset-top), 6px);
+  background: #213786;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.monitoring-screen {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #213786;
+  color: white;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.monitoring-statusbar {
+  position: relative;
+  height: 54px;
+  flex: 0 0 54px;
+  color: white;
+}
+
+.monitoring-time {
+  position: absolute;
+  left: 48px;
+  top: 17px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.monitoring-levels {
+  position: absolute;
+  right: 30px;
+  top: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.monitoring-cellular {
+  height: 12px;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.monitoring-cellular i {
+  width: 3px;
+  border-radius: 2px;
+  background: currentColor;
+  display: block;
+}
+
+.monitoring-cellular i:nth-child(1) { height: 4px; }
+.monitoring-cellular i:nth-child(2) { height: 6px; }
+.monitoring-cellular i:nth-child(3) { height: 9px; }
+.monitoring-cellular i:nth-child(4) { height: 12px; }
+
+.monitoring-wifi {
+  position: relative;
+  width: 16px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.monitoring-wifi::before,
+.monitoring-wifi::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  border: 2px solid currentColor;
+  border-color: currentColor transparent transparent transparent;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.monitoring-wifi::before {
+  width: 17px;
+  height: 17px;
+  top: 2px;
+}
+
+.monitoring-wifi::after {
+  width: 9px;
+  height: 9px;
+  top: 7px;
+}
+
+.monitoring-battery {
+  position: relative;
+  width: 25px;
+  height: 13px;
+  border: 1px solid rgba(255, 255, 255, .42);
+  border-radius: 4.3px;
+  display: inline-flex;
+  align-items: center;
+  padding: 1px;
+}
+
+.monitoring-battery::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 4px;
+  width: 1.5px;
+  height: 4px;
+  border-radius: 0 2px 2px 0;
+  background: rgba(255, 255, 255, .55);
+}
+
+.monitoring-battery i {
+  width: 21px;
+  height: 9px;
+  border-radius: 2.5px;
+  background: white;
+  display: block;
+}
+
+.monitoring-header {
+  height: 56px;
+  flex: 0 0 56px;
+  padding: 8px 24px 16px;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 32px;
+  align-items: center;
+  gap: 12px;
+}
+
+.monitoring-back,
+.monitoring-header-spacer {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+}
+
+.monitoring-back {
+  border: 0;
+  display: grid;
+  place-items: center;
+  color: white;
+  background: rgba(255, 255, 255, .12);
+  cursor: pointer;
+}
+
+.monitoring-header h1 {
+  margin: 0;
+  min-width: 0;
+  color: white;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: .1px;
+  text-align: center;
+}
+
+.monitoring-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 16px;
+  overflow-y: auto;
+  border-radius: 32px 32px 0 0;
+  background: #eff1f6;
+  scrollbar-width: none;
+}
+
+.monitoring-content::-webkit-scrollbar { display: none; }
+
+.monitoring-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.monitoring-card {
+  overflow: hidden;
+  border-radius: 20px;
+  background: white;
+  color: #2c2e32;
+}
+
+.monitoring-card-status-wrap {
+  padding: 4px 4px 0;
+}
+
+.monitoring-card-status {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 40px;
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: .1px;
+}
+
+.monitoring-card-status svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.monitoring-card-status span:first-of-type {
+  min-width: 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.monitoring-card-status.is-searching {
+  color: #8d560c;
+  background: rgba(239, 144, 16, .10);
+}
+
+.monitoring-card-status.is-auto {
+  color: #213786;
+  background: rgba(33, 55, 134, .07);
+}
+
+.monitoring-card-number {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 400;
+  text-align: right;
+}
+
+.monitoring-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.monitoring-card-body.has-tags {
+  gap: 12px;
+}
+
+.monitoring-card-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #2c2e32;
+  letter-spacing: .1px;
+}
+
+.monitoring-card-copy h2,
+.monitoring-card-copy p {
+  margin: 0;
+}
+
+.monitoring-card-copy h2 {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.monitoring-card-copy p {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.monitoring-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.monitoring-tags span {
+  height: 32px;
+  padding: 4px 12px;
+  border: 1px solid #d5dae7;
+  border-radius: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #eff1f6;
+  color: #2c2a29;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: .1px;
+  white-space: nowrap;
+}
+
+.tabbar-booking-card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 68px;
+  min-height: 102px;
+  padding: 16px;
+  border: 1px solid rgba(239, 144, 16, 0.10);
+  border-radius: 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #2c2e32;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .48), rgba(255, 255, 255, .18) 48%, rgba(249, 211, 159, .20)),
+    rgba(245, 245, 245, .60);
+  box-shadow:
+    0 10px 30px rgba(44, 42, 41, .12),
+    inset 0 0 8px rgba(251, 170, 25, .40),
+    inset 0 1px 0 rgba(255, 255, 255, .44);
+  backdrop-filter: blur(40px) saturate(160%) contrast(104%);
+  -webkit-backdrop-filter: blur(40px) saturate(160%) contrast(104%);
+}
+
+.tabbar-booking-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tabbar-booking-route {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+}
+
+.tabbar-booking-title {
+  color: #2c2e32;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabbar-booking-meta {
+  color: #6c6e75;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.tabbar-booking-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.tabbar-booking-primary,
+.tabbar-booking-secondary {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.tabbar-booking-primary {
+  border: 0;
+  color: white;
+  background: #ef9010;
+}
+
+.tabbar-booking-secondary {
+  border: 1px solid #d5dae7;
+  color: #2c2a29;
+  background: #eff1f6;
+  cursor: pointer;
+  box-shadow: inset 0 0 20px rgba(239, 144, 16, .16);
 }
 .tabbar::before {
   content: "";
@@ -2181,7 +2639,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 
 /* ---- Tabbar dark variant (schedule page) ---- */
 
-.schedule-page ~ .tabbar {
+.schedule-page ~ .tabbar-shell .tabbar {
   background:
     linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04) 42%, rgba(255,255,255,.08)),
     rgba(20, 18, 17, 0.80);
@@ -2193,24 +2651,24 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
     inset 0 -1px 0 rgba(255, 255, 255, .04);
 }
 
-.schedule-page ~ .tabbar::before {
+.schedule-page ~ .tabbar-shell .tabbar::before {
   background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04) 40%, transparent 62%);
 }
 
-.schedule-page ~ .tabbar::after {
+.schedule-page ~ .tabbar-shell .tabbar::after {
   display: none;
 }
 
-.schedule-page ~ .tabbar button,
-.schedule-page ~ .tabbar a {
+.schedule-page ~ .tabbar-shell .tabbar button,
+.schedule-page ~ .tabbar-shell .tabbar a {
   color: rgba(255, 255, 255, 0.38);
 }
 
-.schedule-page ~ .tabbar img {
+.schedule-page ~ .tabbar-shell .tabbar img {
   filter: brightness(0) invert(1) opacity(0.38);
 }
 
-.schedule-page ~ .tabbar .selected {
+.schedule-page ~ .tabbar-shell .tabbar .selected {
   color: #91a3e4;
   background:
     linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)),
@@ -2221,7 +2679,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
     inset 0 -8px 16px rgba(255,255,255,.04);
 }
 
-.schedule-page ~ .tabbar .selected img {
+.schedule-page ~ .tabbar-shell .tabbar .selected img {
   filter: brightness(0) saturate(100%) invert(71%) sepia(28%) saturate(600%) hue-rotate(196deg) brightness(98%) contrast(90%);
 }
 
@@ -2508,7 +2966,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 16px 16px calc(120px + env(safe-area-inset-bottom));
+  padding: 16px 16px calc(240px + env(safe-area-inset-bottom));
   border-radius: 32px 32px 0 0;
   background: var(--canvas);
   display: flex;
@@ -2632,6 +3090,77 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   line-height: 14px;
   letter-spacing: 0.1px;
   color: #6c6e75;
+}
+
+.profile-toggle-card {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.profile-toggle {
+  width: 100%;
+  min-height: 56px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  border-bottom: 1px solid #d5dae7;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.profile-toggle:last-child {
+  border-bottom: 0;
+}
+
+.profile-toggle-label {
+  flex: 1;
+  min-width: 0;
+  font-family: "UZ Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: #2c2e32;
+}
+
+.profile-toggle-control {
+  position: relative;
+  width: 51px;
+  height: 31px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  background: #d5dae7;
+  transition: background .18s ease;
+}
+
+.profile-toggle-control::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .18);
+  transition: transform .18s ease;
+}
+
+.profile-toggle[aria-checked="true"] .profile-toggle-control {
+  background: var(--brand);
+}
+
+.profile-toggle[aria-checked="true"] .profile-toggle-control::after {
+  transform: translateX(20px);
+}
+
+.profile-toggle:focus-visible .profile-toggle-control {
+  outline: 2px solid rgba(33, 55, 134, .32);
+  outline-offset: 2px;
 }
 
 /* ── Date trigger button ─────────────────────────── */

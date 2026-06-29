@@ -1,4 +1,36 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+type TabbarMode = {
+  monitoring: boolean;
+  continueBooking: boolean;
+};
+
+const TABBAR_MODE_KEY = "uz-tabbar-mode";
+const DEFAULT_TABBAR_MODE: TabbarMode = {
+  monitoring: false,
+  continueBooking: false,
+};
+
+function readTabbarMode(): TabbarMode {
+  if (typeof window === "undefined") {
+    return DEFAULT_TABBAR_MODE;
+  }
+
+  try {
+    const saved = window.localStorage.getItem(TABBAR_MODE_KEY);
+    return saved ? { ...DEFAULT_TABBAR_MODE, ...JSON.parse(saved) } : DEFAULT_TABBAR_MODE;
+  } catch {
+    return DEFAULT_TABBAR_MODE;
+  }
+}
+
+function writeTabbarMode(mode: TabbarMode) {
+  window.localStorage.setItem(TABBAR_MODE_KEY, JSON.stringify(mode));
+  window.dispatchEvent(new Event("tabbar-mode-change"));
+}
 
 function UzBonusBadge() {
   return <img src="/icons/uz-bonus-silver.svg" alt="" width="40" height="40" style={{ flexShrink: 0 }} />;
@@ -244,7 +276,41 @@ function ProfileRow({ label, sublabel, icon, isLast, href }: ProfileRowProps) {
   return <div className={className}>{inner}</div>;
 }
 
+type ProfileToggleProps = {
+  label: string;
+  checked: boolean;
+  onChange: () => void;
+};
+
+function ProfileToggle({ label, checked, onChange }: ProfileToggleProps) {
+  return (
+    <button className="profile-toggle" type="button" role="switch" aria-checked={checked} onClick={onChange}>
+      <span className="profile-toggle-label">{label}</span>
+      <span className="profile-toggle-control" aria-hidden />
+    </button>
+  );
+}
+
 export function ProfileScreen() {
+  const [tabbarMode, setTabbarMode] = useState<TabbarMode>(DEFAULT_TABBAR_MODE);
+
+  useEffect(() => {
+    const syncMode = () => setTabbarMode(readTabbarMode());
+    syncMode();
+    window.addEventListener("storage", syncMode);
+    window.addEventListener("tabbar-mode-change", syncMode);
+
+    return () => {
+      window.removeEventListener("storage", syncMode);
+      window.removeEventListener("tabbar-mode-change", syncMode);
+    };
+  }, []);
+
+  function updateTabbarMode(nextMode: TabbarMode) {
+    setTabbarMode(nextMode);
+    writeTabbarMode(nextMode);
+  }
+
   return (
     <div className="profile-page">
       <div className="profile-offers">
@@ -307,6 +373,19 @@ export function ProfileScreen() {
         </div>
 
         <p className="profile-version">Версія 3.0.0</p>
+
+        <div className="profile-card profile-toggle-card" aria-label="Режими таббару">
+          <ProfileToggle
+            label="Моніторинг"
+            checked={tabbarMode.monitoring}
+            onChange={() => updateTabbarMode({ ...tabbarMode, monitoring: !tabbarMode.monitoring })}
+          />
+          <ProfileToggle
+            label="Продовжити бронювання"
+            checked={tabbarMode.continueBooking}
+            onChange={() => updateTabbarMode({ ...tabbarMode, continueBooking: !tabbarMode.continueBooking })}
+          />
+        </div>
       </div>
     </div>
   );
