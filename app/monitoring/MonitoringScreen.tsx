@@ -15,6 +15,12 @@ type MonitorItem = {
   details: string;
   tags?: string[];
   actionLabel?: string;
+  autoPurchase?: {
+    tickets: string;
+    price: string;
+    passengerInitials: string[];
+    note: string;
+  };
 };
 
 const ITEMS: MonitorItem[] = [
@@ -41,9 +47,15 @@ const ITEMS: MonitorItem[] = [
     status: "auto",
     number: "#124203",
     route: "Хмельницький → Івано-Франківськ",
-    date: "1 Листопада, Вт ∙ 1 місце",
+    date: "1 Листопада, Вт",
     details: "1 клас у потягу 080К",
     tags: ["Лише нижні", "Не біля вбиральні", "Біля вікна", "Кондиціонер"],
+    autoPurchase: {
+      tickets: "2 квитки",
+      price: "2052 ₴",
+      passengerInitials: ["ЕП", ""],
+      note: "Якщо придбаємо дешевші квитки, повернемо різницю. Якщо місця не зʼявляться, повернемо всю суму.",
+    },
   },
 ];
 
@@ -64,9 +76,10 @@ function StatusPill({ item }: { item: MonitorItem }) {
 
 function MonitorCard({ item }: { item: MonitorItem }) {
   const hasFooterContent = Boolean(item.tags?.length || item.actionLabel);
+  const isAuto = item.status === "auto";
 
   return (
-    <article className="monitoring-card">
+    <article className={`monitoring-card ${isAuto ? "is-auto-purchase" : ""}`}>
       <div className="monitoring-card-status-wrap">
         <StatusPill item={item} />
       </div>
@@ -89,6 +102,24 @@ function MonitorCard({ item }: { item: MonitorItem }) {
           </Link>
         ) : null}
       </div>
+      {item.autoPurchase ? (
+        <div className="monitoring-auto-purchase">
+          <div className="monitoring-auto-summary">
+            <div className="monitoring-passengers" aria-hidden="true">
+              {item.autoPurchase.passengerInitials.map((initials, index) => (
+                <span className="monitoring-passenger-avatar" key={`${initials}-${index}`}>
+                  {initials ? initials : <img src="/icons/passenger-avatar.png" alt="" />}
+                </span>
+              ))}
+            </div>
+            <span className="monitoring-auto-tickets">{item.autoPurchase.tickets}</span>
+            <strong className="monitoring-auto-price">{item.autoPurchase.price}</strong>
+          </div>
+          <p className="monitoring-auto-note">
+            <Link href="/tickets">Кошти зарезервовані.</Link> {item.autoPurchase.note}
+          </p>
+        </div>
+      ) : null}
     </article>
   );
 }

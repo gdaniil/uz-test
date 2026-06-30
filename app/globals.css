@@ -340,6 +340,7 @@ button { color: inherit; }
 
 /* Monitoring */
 .monitoring-screen {
+  height: 100%;
   min-height: 100%;
   display: flex;
   flex-direction: column;
@@ -388,7 +389,7 @@ button { color: inherit; }
 .monitoring-content {
   flex: 1 1 auto;
   min-height: 0;
-  padding: 16px;
+  padding: 16px 16px 40px;
   overflow-y: auto;
   border-radius: 32px 32px 0 0;
   background: #eff1f6;
@@ -408,6 +409,10 @@ button { color: inherit; }
   border-radius: 20px;
   background: white;
   color: #2c2e32;
+}
+
+.monitoring-card.is-auto-purchase {
+  border-radius: 20px;
 }
 
 .monitoring-card-status-wrap {
@@ -451,6 +456,10 @@ button { color: inherit; }
 .monitoring-card-status.is-auto {
   color: #213786;
   background: rgba(33, 55, 134, .07);
+}
+
+.is-auto-purchase .monitoring-card-status-wrap {
+  padding-bottom: 0;
 }
 
 .monitoring-card-number {
@@ -537,6 +546,91 @@ button { color: inherit; }
   white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
+}
+
+.monitoring-auto-purchase {
+  margin: 4px 16px 0;
+  padding: 16px 0;
+  border-top: 1px solid #d5dae7;
+}
+
+.monitoring-auto-summary {
+  min-height: 32px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.monitoring-passengers {
+  width: 52px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.monitoring-passenger-avatar {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #f6d2de;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #ef6f88;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 0;
+}
+
+.monitoring-passenger-avatar + .monitoring-passenger-avatar {
+  margin-left: -12px;
+}
+
+.monitoring-passenger-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.monitoring-auto-note {
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: .1px;
+}
+
+.monitoring-auto-tickets,
+.monitoring-auto-price {
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: .1px;
+}
+
+.monitoring-auto-tickets {
+  min-width: 0;
+  color: #2c2e32;
+  font-weight: 400;
+}
+
+.monitoring-auto-price {
+  color: #2c2e32;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.monitoring-auto-note {
+  margin: 8px 0 0;
+  color: #2c2e32;
+  font-weight: 400;
+}
+
+.monitoring-auto-note a {
+  color: #213786;
+  text-underline-offset: 2px;
 }
 
 .tabbar-booking-card {
@@ -3715,7 +3809,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
   align-items: center;
   justify-content: center;
   gap: 4px;
-  color: #6c6e75;
+  color: rgba(255, 255, 255, .6);
   background: transparent;
   text-decoration: none;
   cursor: pointer;
@@ -3751,12 +3845,12 @@ button:focus-visible, input:focus-visible { outline: 3px solid #95a9ff; outline-
 }
 
 .results-date-cell.active {
-  background: #252931;
-  color: white;
+  background: #eff1f6;
+  color: #2c2e32;
 }
 
 .results-date-cell.active strong,
-.results-date-cell.active span { color: white; }
+.results-date-cell.active span { color: #2c2e32; }
 
 .results-scroll {
   position: absolute;
